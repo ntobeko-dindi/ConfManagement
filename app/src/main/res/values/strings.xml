@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">ConfManagement</string>
+    <string name="app_name">ConfApp</string>
     <string name="title_home">Home</string>
     <string name="title_news">News</string>
     <string name="title_conferences">Conferences</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_up">Sign Up</string>
 </resources>
