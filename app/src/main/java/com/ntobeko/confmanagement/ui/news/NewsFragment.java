@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.ntobeko.confmanagement.data.NewsListAdapter;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.models.Credential;
+import com.ntobeko.confmanagement.models.NewsArticle;
 
 import java.util.ArrayList;
 
@@ -29,36 +30,23 @@ public class NewsFragment extends Fragment {
         binding = FragmentNewsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        //final TextView textView = binding.textDashboard;
-        //dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        ArrayList<NewsArticle> articles = new ArrayList<>();
+        NewsArticle article = new NewsArticle("Ntobeko is presenting in room A56","Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ");
 
-        ArrayList<Credential> credentials = new ArrayList<>();
-        Credential obj = new Credential("Facebook","xcoding","pass1234");
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
+        articles.add(article);
 
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-        credentials.add(obj);
-
-        ListAdapter listAdapter = new NewsListAdapter(getContext(),credentials);
+        ListAdapter listAdapter = new NewsListAdapter(getContext(),articles);
 
         binding.listview.setAdapter(listAdapter);
         binding.listview.setClickable(true);

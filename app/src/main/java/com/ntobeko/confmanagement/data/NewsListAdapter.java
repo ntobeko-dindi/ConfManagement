@@ -10,13 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ntobeko.confmanagement.R;
-import com.ntobeko.confmanagement.models.Credential;
+import com.ntobeko.confmanagement.models.NewsArticle;
 
 import java.util.ArrayList;
 
-public class NewsListAdapter extends ArrayAdapter<Credential> {
+public class NewsListAdapter extends ArrayAdapter<NewsArticle> {
 
-    public NewsListAdapter(Context context, ArrayList<Credential> list){
+    public NewsListAdapter(Context context, ArrayList<NewsArticle> list){
         super(context, R.layout.news_list_view,list);
     }
 
@@ -24,19 +24,17 @@ public class NewsListAdapter extends ArrayAdapter<Credential> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        Credential user = getItem(position);
+        NewsArticle article = getItem(position);
 
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.news_list_view,parent,false);
         }
 
-        TextView userName = convertView.findViewById(R.id.personName);
-        TextView lastMsg = convertView.findViewById(R.id.lastMessage);
-        TextView time = convertView.findViewById(R.id.msgtime);
+        TextView title = convertView.findViewById(R.id.txt_title);
+        TextView msg = convertView.findViewById(R.id.description);
 
-        userName.setText(user.getSiteName());
-        lastMsg.setText(user.getUserName());
-        time.setText(user.getPassword());
+        title.setText(article.getTitle());
+        msg.setText(article.getDescription());
 
         return convertView;
     }

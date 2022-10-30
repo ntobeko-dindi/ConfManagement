@@ -4,13 +4,20 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.ntobeko.confmanagement.data.ConferencesListAdapter;
+import com.ntobeko.confmanagement.data.NewsListAdapter;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
+import com.ntobeko.confmanagement.models.Abstract;
+import com.ntobeko.confmanagement.models.Credential;
+
+import java.util.ArrayList;
 
 public class ConferencesFragment extends Fragment {
 
@@ -24,8 +31,27 @@ public class ConferencesFragment extends Fragment {
         binding = FragmentConferencesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        ArrayList<Abstract> abstracts = new ArrayList<>();
+        Abstract obj = new Abstract("https://image.com","Ntobeko Dindi", "As this is just a custom ImageView and not a custom Drawable or a combination of both, it can be used with all kinds of drawables","29 Oct 2022","Live Presentation");
+
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+        abstracts.add(obj);
+
+        ListAdapter listAdapter = new ConferencesListAdapter(getContext(),abstracts);
+
+        binding.listview.setAdapter(listAdapter);
+        binding.listview.setClickable(true);
+
         return root;
     }
 
