@@ -33,15 +33,7 @@ public class Login {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    @Override
-    public String toString() {
-        return "Login{" +
-                "email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                '}';
+        return !matcher.matches();
     }
 
     public boolean passwordValid(){

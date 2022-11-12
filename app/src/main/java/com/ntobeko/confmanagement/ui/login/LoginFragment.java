@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -61,7 +60,7 @@ public class LoginFragment extends Fragment {
                 Login login = new Login();
                 login.setEmail(email);
                 login.setPassword(password);
-                if(!login.emailValid() || !login.passwordValid()){
+                if(login.emailValid() || !login.passwordValid()){
                     Snackbar.make(binding.getRoot(), "Invalid username or password", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                     return;
                 }
@@ -87,8 +86,8 @@ public class LoginFragment extends Fragment {
                 newUser.setLogin(new Login(email, pass));
                 newUser.setUserRole(UserRoles.attendee);
 
-                if(!newUser.getLogin().emailValid()){
-                    showSnackBar("Password Mismatch");
+                if(newUser.getLogin().emailValid()){
+                    showSnackBar("Invalid email address");
                     return;
                 }
                 new FireBaseHelper().createUser(newUser,getView(),getActivity(),getContext());
