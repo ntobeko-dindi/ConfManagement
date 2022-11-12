@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.ntobeko.confmanagement.ui.home.HomeFragment"
+        android:name="com.ntobeko.confmanagement.ui.login.LoginFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_login" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
