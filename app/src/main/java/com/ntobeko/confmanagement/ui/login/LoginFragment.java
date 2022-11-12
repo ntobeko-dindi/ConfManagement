@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,6 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentLoginBinding;
+import com.ntobeko.confmanagement.models.Login;
+
+import java.util.Objects;
 
 public class LoginFragment extends Fragment {
 
@@ -48,9 +50,20 @@ public class LoginFragment extends Fragment {
         });
 
         binding.singIn.setOnClickListener(v -> {
+
+            Object email = binding.eMail.getText();
+            Object password = binding.passwords.getText();
+
+            if(email == null || password == null)
+                return;
+
+            Login login = new Login();
+            login.setEmail(email.toString().trim());
+            login.setPassword(password.toString().trim());
+
             Intent i = new Intent(getContext(), AuthActivity.class);
             startActivity(i);
-            getActivity().finish();
+            requireActivity().finish();
         });
         return root;
     }
