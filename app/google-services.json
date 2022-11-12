@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "138664993146",
+    "project_id": "confmanagement-cee31",
+    "storage_bucket": "confmanagement-cee31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:138664993146:android:3368506a24194c32aab6c3",
+        "android_client_info": {
+          "package_name": "com.ntobeko.confmanagement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "138664993146-bgoja3l1mrr9l77nv2a7pnfdlvpvvu1s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ntobeko.confmanagement",
+            "certificate_hash": "f93fd57f43169b17555d6567a495c03dec6bf596"
+          }
+        },
+        {
+          "client_id": "138664993146-ji43g1lin8s29p4p5s2b85l71pbak0bm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTSW0rSFaeh8P4-zlQaP91FKNsBVXZehw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "138664993146-ji43g1lin8s29p4p5s2b85l71pbak0bm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

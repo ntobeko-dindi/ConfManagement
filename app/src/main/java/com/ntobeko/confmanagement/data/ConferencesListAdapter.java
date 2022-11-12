@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.models.Abstract;
-import com.ntobeko.confmanagement.models.Credential;
 
 import java.util.ArrayList;
 

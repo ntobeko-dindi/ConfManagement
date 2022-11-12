@@ -1,19 +1,23 @@
 package com.ntobeko.confmanagement.ui.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.ntobeko.confmanagement.AuthActivity;
+import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.R;
+import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.FragmentLoginBinding;
 import com.ntobeko.confmanagement.models.Login;
+import com.ntobeko.confmanagement.models.User;
 
 import java.util.Objects;
 
@@ -49,25 +53,53 @@ public class LoginFragment extends Fragment {
             binding.singIn.setText(getResources().getText(R.string.log_in));
         });
 
+        //login and sign up
         binding.singIn.setOnClickListener(v -> {
+            if(binding.logInLayout.getVisibility() == View.VISIBLE){
+                String email = Objects.requireNonNull(binding.eMail.getText()).toString().trim();
+                String password = Objects.requireNonNull(binding.passwords.getText()).toString().trim();
+                Login login = new Login();
+                login.setEmail(email);
+                login.setPassword(password);
+                if(!login.emailValid() || !login.passwordValid()){
+                    Snackbar.make(binding.getRoot(), "Invalid username or password", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    return;
+                }
+                new FireBaseHelper().login(login, binding.getRoot(), getActivity(), getContext(), new AuthActivity());
+            }else{
+                User newUser = new User();
+                String fName = Objects.requireNonNull(binding.firstName.getText()).toString().trim();
+                String lName = Objects.requireNonNull(binding.lastname.getText()).toString().trim();
+                String email = Objects.requireNonNull(binding.eMails.getText()).toString().trim();
+                String pass = Objects.requireNonNull(binding.passwordss.getText()).toString().trim();
+                String confPass = Objects.requireNonNull(binding.passwords01.getText()).toString().trim();
 
-            Object email = binding.eMail.getText();
-            Object password = binding.passwords.getText();
+                if(fName.isEmpty() || lName.isEmpty() || email.isEmpty() || pass.isEmpty() || confPass.isEmpty()){
+                    showSnackBar("All fields are required");
+                    return;
+                }
+                if(!pass.equals(confPass)){
+                    showSnackBar("Password Mismatch");
+                    return;
+                }
+                newUser.setFirstName(fName);
+                newUser.setLastName(lName);
+                newUser.setLogin(new Login(email, pass));
+                newUser.setUserRole(UserRoles.attendee);
 
-            if(email == null || password == null)
-                return;
-
-            Login login = new Login();
-            login.setEmail(email.toString().trim());
-            login.setPassword(password.toString().trim());
-
-            Intent i = new Intent(getContext(), AuthActivity.class);
-            startActivity(i);
-            requireActivity().finish();
+                if(!newUser.getLogin().emailValid()){
+                    showSnackBar("Password Mismatch");
+                    return;
+                }
+                new FireBaseHelper().createUser(newUser,getView(),getActivity(),getContext());
+            }
         });
         return root;
     }
 
+    private void showSnackBar(String message) {
+        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+    }
     @Override
     public void onDestroyView() {
         super.onDestroyView();

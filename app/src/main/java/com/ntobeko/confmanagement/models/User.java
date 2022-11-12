@@ -3,9 +3,18 @@ package com.ntobeko.confmanagement.models;
 import com.ntobeko.confmanagement.Enums.UserRoles;
 
 public class User {
-    private String firstName, lastName, email;
+    private String firstName, lastName;
     private UserRoles userRole;
     private Login login;
+
+    public User(){}
+
+    public User(String firstName, String lastName, UserRoles userRole, Login login) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.userRole = userRole;
+        this.login = login;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -23,15 +32,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public UserRoles getUserRole() {
+    public UserRoles getUserRole(UserRoles attendee) {
         return userRole;
     }
 
