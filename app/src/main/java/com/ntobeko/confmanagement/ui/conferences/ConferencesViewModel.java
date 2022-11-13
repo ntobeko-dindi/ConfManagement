@@ -1,4 +1,4 @@
-package com.ntobeko.confmanagement.ui.gallery.conferences;
+package com.ntobeko.confmanagement.ui.conferences;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

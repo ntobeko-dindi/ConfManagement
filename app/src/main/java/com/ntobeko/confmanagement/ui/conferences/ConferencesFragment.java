@@ -1,4 +1,4 @@
-package com.ntobeko.confmanagement.ui.gallery.conferences;
+package com.ntobeko.confmanagement.ui.conferences;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.ntobeko.confmanagement.ui.gallery.conferences.ConferencesFragment"
+        android:name="com.ntobeko.confmanagement.ui.conferences.ConferencesFragment"
         android:label="@string/title_conferences"
         tools:layout="@layout/fragment_conferences" />
 </navigation>
