@@ -9,12 +9,10 @@
     tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="10dp"
         app:cardElevation="2dp"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
         app:cardUseCompatPadding="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
