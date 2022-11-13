@@ -41,4 +41,14 @@
     <string name="or">OR</string>
     <string name="menu_register">Register</string>
     <string name="menu_approval">Approvals</string>
+    <string name="type_research_abstract_here">Type Research Abstract here</string>
+    <string name="select_associated_conference">Select associated conference</string>
+    <string name="reject">Reject</string>
+    <string name="approve">Approve</string>
+    <string name="status">Status</string>
+    <string name="abstract_theme">Abstract theme</string>
+    <string name="abstract_topic">Abstract topic</string>
+    <string name="abstract_body">Abstract body</string>
+    <string name="research_proposal_title">Research proposal title</string>
+    <string name="submitted_on_11_november_2022">submitted on : 11 November 2022</string>
 </resources>

@@ -18,6 +18,7 @@ import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
 import com.ntobeko.confmanagement.models.User;
+import com.ntobeko.confmanagement.models.Utilities;
 
 import org.json.JSONArray;
 
@@ -54,7 +55,7 @@ public class FireBaseHelper{
                         })
                         .addOnFailureListener(e -> {});
                 }else {
-                    Snackbar.make(view, "Failed to create user", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    new Utilities().showSnackBar("Failed to create user", view);
                 }
             });
     }
@@ -71,7 +72,7 @@ public class FireBaseHelper{
                     startActivity.startActivity(new Intent(context, endActivity.getClass()));
                     startActivity.finish();
                 } else {
-                    Snackbar.make(view, Objects.requireNonNull(Objects.requireNonNull(task.getException()).getMessage()), Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    new Utilities().showSnackBar(Objects.requireNonNull(task.getException()).getMessage(), view);
                 }
             });
     }
@@ -92,33 +93,29 @@ public class FireBaseHelper{
 
         db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()))
             .set(article)
-            .addOnSuccessListener(aVoid -> showSnackBar("Article Posted", view))
-            .addOnFailureListener(e -> showSnackBar("Error occurred while posting the article", view));
+            .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Article Posted", view))
+            .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the article", view));
     }
 
-    public void getArticles(){
+    public void getArticles(View view){
         ArrayList<NewsArticle> articles = new ArrayList<>();
         db.collection("articles")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            NewsArticle article = new NewsArticle(
-                                    Objects.requireNonNull(document.getData().get("title")).toString(),
-                                    Objects.requireNonNull(document.getData().get("description")).toString(),
-                                    Objects.requireNonNull(document.getData().get("originatorId")).toString(),
-                                    Objects.requireNonNull(document.getData().get("datePosted")).toString(),
-                                    Objects.requireNonNull(document.getData().get("link")).toString()
-                            );
-                            //add to sql lite
-                        }
-                    } else {
-                        System.out.println("Error getting documents." + task.getException());
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        NewsArticle article = new NewsArticle(
+                                Objects.requireNonNull(document.getData().get("title")).toString(),
+                                Objects.requireNonNull(document.getData().get("description")).toString(),
+                                Objects.requireNonNull(document.getData().get("originatorId")).toString(),
+                                Objects.requireNonNull(document.getData().get("datePosted")).toString(),
+                                Objects.requireNonNull(document.getData().get("link")).toString()
+                        );
+                        //add to sql lite
                     }
-                });
-    }
-
-    private void showSnackBar(String message, View view){
-        Snackbar.make(view, message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                } else {
+                    new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                }
+            });
     }
 }

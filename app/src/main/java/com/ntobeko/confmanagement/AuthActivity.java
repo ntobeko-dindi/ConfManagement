@@ -18,19 +18,16 @@ import com.ntobeko.confmanagement.databinding.ActivityAuthBinding;
 public class AuthActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityAuthBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityAuthBinding.inflate(getLayoutInflater());
+        com.ntobeko.confmanagement.databinding.ActivityAuthBinding binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarAuth.toolbar);
-        binding.appBarAuth.fab.setOnClickListener(view -> {
-            new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity());
-        });
+        binding.appBarAuth.fab.setOnClickListener(view -> new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity()));
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         mAppBarConfiguration = new AppBarConfiguration.Builder(

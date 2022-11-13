@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.R;
@@ -17,6 +16,7 @@ import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.FragmentLoginBinding;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.User;
+import com.ntobeko.confmanagement.models.Utilities;
 
 import java.util.Objects;
 
@@ -61,7 +61,7 @@ public class LoginFragment extends Fragment {
                 login.setEmail(email);
                 login.setPassword(password);
                 if(login.emailValid() || !login.passwordValid()){
-                    Snackbar.make(binding.getRoot(), "Invalid username or password", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                    new Utilities().showSnackBar("Invalid username or password", root);
                     return;
                 }
                 new FireBaseHelper().login(login, binding.getRoot(), getActivity(), getContext(), new AuthActivity());
@@ -74,11 +74,11 @@ public class LoginFragment extends Fragment {
                 String confPass = Objects.requireNonNull(binding.passwords01.getText()).toString().trim();
 
                 if(fName.isEmpty() || lName.isEmpty() || email.isEmpty() || pass.isEmpty() || confPass.isEmpty()){
-                    showSnackBar("All fields are required");
+                    new Utilities().showSnackBar("All fields are required", root);
                     return;
                 }
                 if(!pass.equals(confPass)){
-                    showSnackBar("Password Mismatch");
+                    new Utilities().showSnackBar("Password Mismatch", root);
                     return;
                 }
                 newUser.setFirstName(fName);
@@ -87,17 +87,13 @@ public class LoginFragment extends Fragment {
                 newUser.setUserRole(UserRoles.attendee);
 
                 if(newUser.getLogin().emailValid()){
-                    showSnackBar("Invalid email address");
+                    new Utilities().showSnackBar("Invalid email address", root);
                     return;
                 }
                 new FireBaseHelper().createUser(newUser,getView(),getActivity(),getContext());
             }
         });
         return root;
-    }
-
-    private void showSnackBar(String message) {
-        Snackbar.make(binding.getRoot(), message, Snackbar.LENGTH_LONG).setAction("Action", null).show();
     }
     @Override
     public void onDestroyView() {

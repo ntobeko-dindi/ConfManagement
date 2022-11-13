@@ -9,9 +9,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.ActivityMainBinding;
+import com.ntobeko.confmanagement.models.Utilities;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +42,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(MainActivity.this, AuthActivity.class));
             finish();
         }
-        Snackbar.make(binding.getRoot(), "User Logged Out", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        new Utilities().showSnackBar("User Logged Out", binding.navView);
     }
 }

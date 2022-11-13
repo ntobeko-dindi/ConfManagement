@@ -9,7 +9,7 @@
     tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="25dp"
+        app:cardCornerRadius="5dp"
         app:cardElevation="2dp"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
