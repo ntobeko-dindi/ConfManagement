@@ -27,7 +27,6 @@
                 android:layout_height="wrap_content">
                 <LinearLayout
                     android:id="@+id/logInLayout"
-                    android:background="@color/white"
                     android:padding="15dp"
                     android:gravity="center"
                     android:orientation="vertical"

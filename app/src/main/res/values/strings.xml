@@ -32,4 +32,12 @@
     <string name="title">Title</string>
     <string name="type_message_here">Type Message here</string>
     <string name="link_optional">Link (Optional)</string>
+    <string name="forget_password">Forget Password?</string>
+    <string name="firstname">FirstName</string>
+    <string name="lastname">Lastname</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email_or_user_name">Email or User Name</string>
+    <string name="or">OR</string>
 </resources>

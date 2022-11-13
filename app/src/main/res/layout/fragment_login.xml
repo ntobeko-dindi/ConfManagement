@@ -83,7 +83,6 @@
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/logInLayout"
-                android:background="@color/white"
                 android:padding="25dp"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -92,7 +91,7 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:hint="Email or User Name"
+                    android:hint="@string/email_or_user_name"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
@@ -116,7 +115,7 @@
                         />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
@@ -142,7 +141,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
                 <TextView
                     android:textSize="11sp"
-                    android:text="Forget Password?"
+                    android:text="@string/forget_password"
                     android:textAlignment="textEnd"
                     android:textColor="#616161"
                     android:textStyle="normal"
@@ -151,7 +150,6 @@
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/singUpLayout"
-                android:background="@color/white"
                 android:padding="25dp"
                 android:visibility="gone"
                 android:gravity="center"
@@ -161,7 +159,7 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:hint="FirstName"
+                    android:hint="@string/firstname"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
@@ -186,7 +184,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:hint="Lastname"
+                    android:hint="@string/lastname"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
@@ -211,7 +209,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:hint="Email"
+                    android:hint="@string/email"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
@@ -236,7 +234,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:hint="Password"
+                    android:hint="@string/password"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
@@ -261,7 +259,7 @@
                         />
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
-                    android:hint="Confirm Password"
+                    android:hint="@string/confirm_password"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
@@ -304,7 +302,7 @@
                 android:layout_height="wrap_content"/>
 
             <TextView
-                android:text="OR"
+                android:text="@string/or"
                 android:textSize="18sp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
@@ -326,17 +324,20 @@
                     android:src="@drawable/ic_facebook"
                     android:layout_margin="10dp"
                     android:layout_width="35dp"
-                    android:layout_height="35dp"/>
+                    android:layout_height="35dp"
+                    android:contentDescription="@string/todo" />
                 <ImageView
                     android:src="@drawable/ic_google"
                     android:layout_margin="10dp"
                     android:layout_width="35dp"
-                    android:layout_height="35dp"/>
+                    android:layout_height="35dp"
+                    android:contentDescription="@string/todo" />
                 <ImageView
                     android:src="@drawable/ic_twitter"
                     android:layout_margin="10dp"
                     android:layout_width="35dp"
-                    android:layout_height="35dp"/>
+                    android:layout_height="35dp"
+                    android:contentDescription="@string/todo" />
             </LinearLayout>
         </LinearLayout>
         </ScrollView>

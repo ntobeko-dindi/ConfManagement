@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
@@ -10,7 +9,6 @@
         app:cardElevation="5dp"
         app:cardCornerRadius="18dp"
         android:layout_margin="5dp"
-        app:cardBackgroundColor="@color/listColor"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -36,7 +34,7 @@
                 android:paddingBottom="16dp"
                 android:textSize="16sp"
                 android:text="@string/app_name"
-                android:textColor="@color/pinkColor" />
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -58,7 +56,7 @@
                 android:paddingBottom="16dp"
                 android:textSize="16sp"
                 android:text="@string/app_name"
-                android:textColor="@color/pinkColor" />
+                />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
