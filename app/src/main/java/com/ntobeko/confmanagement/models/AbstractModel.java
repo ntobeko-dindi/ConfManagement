@@ -1,7 +1,10 @@
 package com.ntobeko.confmanagement.models;
 
+import com.ntobeko.confmanagement.Enums.ProposalStatus;
+
 public class AbstractModel {
-    private String researchTopic, abstractBody, theme, conferenceId, submissionDate;
+    private String researchTopic, abstractBody, theme, conferenceId, submissionDate, authors;
+    private ProposalStatus status;
     public String getResearchTopic() {
         return researchTopic;
     }
@@ -31,5 +34,17 @@ public class AbstractModel {
     }
     public void setSubmissionDate(String submissionDate) {
         this.submissionDate = submissionDate;
+    }
+    public ProposalStatus getStatus() {
+        return status;
+    }
+    public void setStatus(ProposalStatus status) {
+        this.status = status;
+    }
+    public String getAuthors() {
+        return authors;
+    }
+    public void setAuthors(String authors) {
+        this.authors = authors;
     }
 }

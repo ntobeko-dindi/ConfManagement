@@ -17,15 +17,15 @@
     <string name="title_activity_auth">AuthActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">ConfApp</string>
+    <string name="nav_header_subtitle">support@confapp.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="todo">TODO</string>
-    <string name="menu_postnewsarticle">Post News</string>
+    <string name="menu_post_news_article">Post News</string>
     <string name="post">Post</string>
     <string name="post_article">Post Article</string>
     <string name="title">Title</string>
@@ -51,4 +51,5 @@
     <string name="abstract_body">Abstract body</string>
     <string name="research_proposal_title">Research proposal title</string>
     <string name="submitted_on_11_november_2022">submitted on : 11 November 2022</string>
+    <string name="select_conference_theme">Select Conference Theme</string>
 </resources>

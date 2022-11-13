@@ -20,6 +20,6 @@
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.ntobeko.confmanagement.ui.postnewsarticle.PostNewsArticleFragment"
-        android:label="@string/menu_postnewsarticle"
+        android:label="@string/menu_post_news_article"
         tools:layout="@layout/fragment_postnewsarticle" />
 </navigation>

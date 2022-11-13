@@ -41,24 +41,16 @@ public class NewsFragment extends Fragment {
                                         new LocalDate().getLocalDateTime(),
                                         "");
 
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
-        articles.add(article);
+        int rows = 25;
+        do {
+            articles.add(article);
+            rows--;
+        } while (rows > 0);
 
         ListAdapter listAdapter = new NewsListAdapter(getContext(),articles);
 
         binding.listview.setAdapter(listAdapter);
         binding.listview.setClickable(true);
-
         return root;
     }
 

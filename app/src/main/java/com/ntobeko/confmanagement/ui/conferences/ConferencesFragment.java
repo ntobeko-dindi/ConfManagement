@@ -29,26 +29,18 @@ public class ConferencesFragment extends Fragment {
         View root = binding.getRoot();
 
         ArrayList<Abstract> abstracts = new ArrayList<>();
-        Abstract obj = new Abstract("https://image.com","Ntobeko Dindi", "As this is just a custom ImageView and not a custom Drawable or a combination of both, it can be used with all kinds of drawables","29 Oct 2022","Live Presentation");
+        Abstract obj = new Abstract("https://image.com","Conference Venue", "Conference description","29 Oct 2022","Conference Theme/title");
 
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
-        abstracts.add(obj);
+        int rows = 2;
+        do {
+            abstracts.add(obj);
+            rows--;
+        } while (rows > 0);
 
         ListAdapter listAdapter = new ConferencesListAdapter(getContext(),abstracts);
 
         binding.listview.setAdapter(listAdapter);
         binding.listview.setClickable(true);
-
         return root;
     }
 
