@@ -25,6 +25,7 @@ public class NewsListAdapter extends ArrayAdapter<NewsArticle> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         NewsArticle article = getItem(position);
+        new FireBaseHelper().getArticles();
 
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.news_list_view,parent,false);

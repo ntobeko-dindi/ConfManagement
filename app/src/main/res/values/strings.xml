@@ -26,4 +26,10 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="todo">TODO</string>
+    <string name="menu_postnewsarticle">Post News</string>
+    <string name="post">Post</string>
+    <string name="post_article">Post Article</string>
+    <string name="title">Title</string>
+    <string name="type_message_here">Type Message here</string>
+    <string name="link_optional">Link (Optional)</string>
 </resources>
