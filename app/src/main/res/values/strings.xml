@@ -23,7 +23,6 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="todo">TODO</string>
     <string name="menu_postnewsarticle">Post News</string>
@@ -40,4 +39,6 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="email_or_user_name">Email or User Name</string>
     <string name="or">OR</string>
+    <string name="menu_register">Register</string>
+    <string name="menu_approval">Approvals</string>
 </resources>
