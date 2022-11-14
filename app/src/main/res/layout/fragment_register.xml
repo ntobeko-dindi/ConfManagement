@@ -32,20 +32,23 @@
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        app:shapeAppearanceOverlay="@style/Button4"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:hint="@string/select_conference_theme">
 
-                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                            android:id="@+id/conferenceId"
-                            android:ems="10"
-                            android:textSize="13sp"
+                        <AutoCompleteTextView
+                            android:id="@+id/spinnerConference"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/select_associated_conference"/>
+                            android:textSize="13sp"
+                            android:textStyle="normal"
+                            android:inputType="none"
+                            tools:ignore="LabelFor" />
+
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -72,23 +75,26 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:layout_marginTop="10dp"
-                        app:shapeAppearanceOverlay="@style/Button4"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-
-                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                            android:id="@+id/theme"
-                            android:ems="10"
-                            android:textSize="13sp"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/TextInputLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/select_conference_theme"/>
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="5dp"
+                            android:hint="@string/select_conference_theme">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/spinnerThemes"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="13sp"
+                                android:textStyle="normal"
+                                android:inputType="none"
+                                tools:ignore="LabelFor" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:hint="@string/type_research_abstract_here"
@@ -114,8 +120,9 @@
                             />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
+
                 <Button
-                    android:id="@+id/postArticle"
+                    android:id="@+id/register"
                     android:text="@string/menu_register"
                     android:textSize="17sp"
                     android:textAllCaps="false"
