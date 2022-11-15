@@ -33,7 +33,7 @@ public class ApprovalsFragment extends Fragment {
 
         AbstractModel abstractModel = new AbstractModel();
         abstractModel.setTheme("Educational research");
-        abstractModel.setAuthors("Authors : Mr Ntobeko Dindi, et al");
+        abstractModel.setCoAuthors("Authors : Mr Ntobeko Dindi, et al");
         abstractModel.setStatus(ProposalStatus.Submitted);
         abstractModel.setResearchTopic("The effect of online leaning in universities");
         abstractModel.setSubmissionDate("Submitted on : " + new LocalDate().getLocalDateTime());

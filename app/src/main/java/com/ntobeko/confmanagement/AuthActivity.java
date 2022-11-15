@@ -2,6 +2,7 @@ package com.ntobeko.confmanagement;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.ActivityAuthBinding;
+import com.ntobeko.confmanagement.models.Utilities;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -27,7 +29,9 @@ public class AuthActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarAuth.toolbar);
+
         binding.appBarAuth.fab.setOnClickListener(view -> new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity()));
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -37,6 +41,14 @@ public class AuthActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_auth);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+//        drawer.findViewById(R.id.action_auth_news).setOnClickListener(v -> {
+//            new Utilities().showSnackBar("Starting news fragment", binding.getRoot());
+//        });
+//
+//        drawer.findViewById(R.id.action_conferences).setOnClickListener(v -> {
+//            new Utilities().showSnackBar("Starting conferences fragment", binding.getRoot());
+//        });
     }
 
     @Override

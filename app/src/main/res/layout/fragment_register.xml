@@ -38,7 +38,7 @@
                         android:layout_marginStart="5dp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="5dp"
-                        android:hint="@string/select_conference_theme">
+                        android:hint="@string/select_associated_conference">
 
                         <AutoCompleteTextView
                             android:id="@+id/spinnerConference"
@@ -110,14 +110,33 @@
                         android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:inputType="textMultiLine"
                             android:id="@+id/abstractBody"
-                            android:ems="10"
-                            android:textSize="13sp"
-                            android:textStyle="normal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            />
+                            android:ems="10"
+                            android:inputType="textMultiLine"
+                            android:textSize="13sp"
+                            android:textStyle="normal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="5dp"
+                        android:hint="@string/select_your_co_authors">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/spinnerCoAuthors"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="13sp"
+                            android:textStyle="normal"
+                            android:inputType="none"
+                            tools:ignore="LabelFor" />
+
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 

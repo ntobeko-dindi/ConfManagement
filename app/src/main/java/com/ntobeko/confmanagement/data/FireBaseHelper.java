@@ -4,6 +4,7 @@ package com.ntobeko.confmanagement.data;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.telecom.Conference;
 import android.view.View;
 
 import androidx.fragment.app.FragmentActivity;
@@ -15,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.UserRoles;
+import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
 import com.ntobeko.confmanagement.models.User;
@@ -117,5 +119,21 @@ public class FireBaseHelper{
                     new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                 }
             });
+    }
+
+    public void registerForConference(AbstractModel abstractModel, View view){
+        Map<String, Object> _abstract = new HashMap<>();
+        _abstract.put("researchTopic", abstractModel.getResearchTopic());
+        _abstract.put("abstractBody", abstractModel.getAbstractBody());
+        _abstract.put("theme", abstractModel.getTheme());
+        _abstract.put("conferenceId", abstractModel.getConferenceId());
+        _abstract.put("submissionDate", abstractModel.getSubmissionDate());
+        _abstract.put("coAuthors", abstractModel.getCoAuthors());
+        _abstract.put("status", abstractModel.getStatus().name());
+
+        db.collection("conferenceRegistrations").document(Objects.requireNonNull(mAuth.getUid()))
+                .set(_abstract)
+                .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Conference Posted", view))
+                .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the conference", view));
     }
 }

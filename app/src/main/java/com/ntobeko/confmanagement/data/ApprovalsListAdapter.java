@@ -44,7 +44,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         topic.setText(_abstract.getResearchTopic());
         submittedDate.setText(_abstract.getSubmissionDate());
         abstractMsg.setText(_abstract.getAbstractBody());
-        authors.setText(_abstract.getAuthors());
+        authors.setText(_abstract.getCoAuthors());
 
         return convertView;
     }

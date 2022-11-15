@@ -3,7 +3,7 @@ package com.ntobeko.confmanagement.models;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 
 public class AbstractModel {
-    private String researchTopic, abstractBody, theme, conferenceId, submissionDate, authors;
+    private String researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors;
     private ProposalStatus status;
     public String getResearchTopic() {
         return researchTopic;
@@ -41,10 +41,10 @@ public class AbstractModel {
     public void setStatus(ProposalStatus status) {
         this.status = status;
     }
-    public String getAuthors() {
-        return authors;
+    public String getCoAuthors() {
+        return coAuthors;
     }
-    public void setAuthors(String authors) {
-        this.authors = authors;
+    public void setCoAuthors(String coAuthors) {
+        this.coAuthors = coAuthors;
     }
 }

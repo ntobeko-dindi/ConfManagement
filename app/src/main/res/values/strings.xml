@@ -52,4 +52,6 @@
     <string name="research_proposal_title">Research proposal title</string>
     <string name="submitted_on_11_november_2022">submitted on : 11 November 2022</string>
     <string name="select_conference_theme">Select Conference Theme</string>
+    <string name="select_your_co_authors">select your co-authors</string>
+    <string name="news">News</string>
 </resources>
