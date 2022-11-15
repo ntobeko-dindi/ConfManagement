@@ -95,7 +95,7 @@ public class FireBaseHelper{
         article.put("datePosted", newsArticle.getDatePosted());
         article.put("link", newsArticle.getLink());
 
-        db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()))
+        db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()) + "(" + newsArticle.getDatePosted() + ")")
             .set(article)
             .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Article Posted", view))
             .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the article", view));
@@ -117,9 +117,10 @@ public class FireBaseHelper{
                         );
                         articles.add(article);
                     }
-
+                    if(articles.isEmpty()){
+                        new Utilities().showSnackBar("There are no news to show", view);
+                    }
                     ListAdapter listAdapter = new NewsListAdapter(context,articles);
-
                     binding.listview.setAdapter(listAdapter);
                     binding.listview.setClickable(true);
 
