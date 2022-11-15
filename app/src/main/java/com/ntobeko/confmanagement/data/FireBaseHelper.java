@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.telecom.Conference;
 import android.view.View;
+import android.widget.ListAdapter;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -16,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.UserRoles;
+import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
@@ -99,12 +101,12 @@ public class FireBaseHelper{
             .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the article", view));
     }
 
-    public void getArticles(View view){
-        ArrayList<NewsArticle> articles = new ArrayList<>();
+    public void getArticles(View view, Context context, FragmentNewsBinding binding){
         db.collection("articles")
             .get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
+                    ArrayList<NewsArticle> articles = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         NewsArticle article = new NewsArticle(
                                 Objects.requireNonNull(document.getData().get("title")).toString(),
@@ -113,8 +115,14 @@ public class FireBaseHelper{
                                 Objects.requireNonNull(document.getData().get("datePosted")).toString(),
                                 Objects.requireNonNull(document.getData().get("link")).toString()
                         );
-                        //add to sql lite
+                        articles.add(article);
                     }
+
+                    ListAdapter listAdapter = new NewsListAdapter(context,articles);
+
+                    binding.listview.setAdapter(listAdapter);
+                    binding.listview.setClickable(true);
+
                 } else {
                     new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                 }
