@@ -2,7 +2,6 @@ package com.ntobeko.confmanagement;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.ActivityAuthBinding;
-import com.ntobeko.confmanagement.models.Utilities;
 
 public class AuthActivity extends AppCompatActivity {
 

@@ -5,20 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.type.DateTime;
 import com.ntobeko.confmanagement.data.NewsListAdapter;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
-import com.ntobeko.confmanagement.models.Credential;
 import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.NewsArticle;
 
-import java.sql.Date;
 import java.util.ArrayList;
 
 public class NewsFragment extends Fragment {

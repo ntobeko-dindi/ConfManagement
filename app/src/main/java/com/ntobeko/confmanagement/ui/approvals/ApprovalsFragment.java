@@ -11,11 +11,9 @@ import androidx.fragment.app.Fragment;
 
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.data.ApprovalsListAdapter;
-import com.ntobeko.confmanagement.data.NewsListAdapter;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.LocalDate;
-import com.ntobeko.confmanagement.models.NewsArticle;
 
 import java.util.ArrayList;
 
