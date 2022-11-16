@@ -6,20 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.models.AbstractModel;
-import com.ntobeko.confmanagement.models.NewsArticle;
-
 import java.util.ArrayList;
 
 public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
 
     public ApprovalsListAdapter(Context context, ArrayList<AbstractModel> list){
-        super(context, R.layout.news_list_view,list);
+        super(context, R.layout.approvals_list_view,list);
     }
 
     @NonNull

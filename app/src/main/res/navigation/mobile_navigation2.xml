@@ -22,4 +22,23 @@
         android:name="com.ntobeko.confmanagement.ui.postnewsarticle.PostNewsArticleFragment"
         android:label="@string/menu_post_news_article"
         tools:layout="@layout/fragment_postnewsarticle" />
+
+    <fragment
+        android:id="@+id/nav_addconf"
+        android:name="com.ntobeko.confmanagement.ui.addconf.AddConfFragment"
+        android:label="@string/create_conference"
+        tools:layout="@layout/fragment_addconf" />
+
+    <fragment
+        android:id="@+id/nav_authnews"
+        android:name="com.ntobeko.confmanagement.ui.authnews.AuthNewsFragment"
+        android:label="@string/title_news"
+        tools:layout="@layout/fragment_authnews" />
+
+    <fragment
+        android:id="@+id/nav_conferences"
+        android:name="com.ntobeko.confmanagement.ui.conferences.ConferencesFragment"
+        android:label="@string/title_conferences"
+        tools:layout="@layout/fragment_conferences" />
+
 </navigation>

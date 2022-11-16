@@ -54,4 +54,9 @@
     <string name="select_conference_theme">Select Conference Theme</string>
     <string name="select_your_co_authors">select your co-authors</string>
     <string name="news">News</string>
+    <string name="create_conference">Create Conference</string>
+    <string name="conference_theme">Conference Theme</string>
+    <string name="conference_venue">Conference Venue</string>
+    <string name="conference_date">Conference Date</string>
+    <string name="conference_name">Conference Name</string>
 </resources>

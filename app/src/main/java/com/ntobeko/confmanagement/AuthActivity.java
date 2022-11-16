@@ -33,20 +33,12 @@ public class AuthActivity extends AppCompatActivity {
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_auth);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
-//        drawer.findViewById(R.id.action_auth_news).setOnClickListener(v -> {
-//            new Utilities().showSnackBar("Starting news fragment", binding.getRoot());
-//        });
-//
-//        drawer.findViewById(R.id.action_conferences).setOnClickListener(v -> {
-//            new Utilities().showSnackBar("Starting conferences fragment", binding.getRoot());
-//        });
     }
 
     @Override

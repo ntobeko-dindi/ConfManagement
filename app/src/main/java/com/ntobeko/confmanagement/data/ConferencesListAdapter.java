@@ -7,42 +7,39 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.ntobeko.confmanagement.R;
-import com.ntobeko.confmanagement.models.Abstract;
-
+import com.ntobeko.confmanagement.models.Conference;
 import java.util.ArrayList;
 
-public class ConferencesListAdapter extends ArrayAdapter<Abstract> {
+public class ConferencesListAdapter extends ArrayAdapter<Conference> {
 
-    public ConferencesListAdapter(Context context, ArrayList<Abstract> list){
-        super(context, R.layout.news_list_view,list);
+    public ConferencesListAdapter(Context context, ArrayList<Conference> list){
+        super(context, R.layout.conferences_list_view,list);
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        Abstract abs = getItem(position);
+        Conference conference = getItem(position);
 
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.conferences_list_view,parent,false);
         }
 
-        ImageView image = convertView.findViewById(R.id.image);
-        TextView name = convertView.findViewById(R.id.title);
-        TextView description = convertView.findViewById(R.id.description);
+        TextView name = convertView.findViewById(R.id.name);
+        TextView theme = convertView.findViewById(R.id.theme);
+        TextView venue = convertView.findViewById(R.id.venue);
         TextView date = convertView.findViewById(R.id.date);
-        TextView offer = convertView.findViewById(R.id.txt_offer);
+        TextView createdDate = convertView.findViewById(R.id.createdDate);
 
-        name.setText(abs.getName());
-        description.setText(abs.getDescription());
-        date.setText(abs.getDate());
-        offer.setText(abs.getOffer());
-
+        name.setText(conference.getName());
+        theme.setText(conference.getTheme());
+        venue.setText(conference.getVenue());
+        date.setText(conference.getDate());
+        createdDate.setText(conference.getCreatedDate());
         return convertView;
     }
 }

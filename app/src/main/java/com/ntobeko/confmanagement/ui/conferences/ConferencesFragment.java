@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.ntobeko.confmanagement.data.ConferencesListAdapter;
+import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.models.Abstract;
 
@@ -28,19 +29,7 @@ public class ConferencesFragment extends Fragment {
         binding = FragmentConferencesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        ArrayList<Abstract> abstracts = new ArrayList<>();
-        Abstract obj = new Abstract("https://image.com","Conference Venue", "Conference description","29 Oct 2022","Conference Theme/title");
-
-        int rows = 2;
-        do {
-            abstracts.add(obj);
-            rows--;
-        } while (rows > 0);
-
-        ListAdapter listAdapter = new ConferencesListAdapter(getContext(),abstracts);
-
-        binding.listview.setAdapter(listAdapter);
-        binding.listview.setClickable(true);
+        new FireBaseHelper().getConferences(root, getContext(), binding);
         return root;
     }
 
