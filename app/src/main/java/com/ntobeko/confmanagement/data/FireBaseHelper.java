@@ -17,6 +17,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.UserRoles;
+import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.Login;
@@ -144,5 +145,34 @@ public class FireBaseHelper{
                 .set(_abstract)
                 .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Conference Posted", view))
                 .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the conference", view));
+    }
+
+    public void getAbstracts(View view, Context context, FragmentApprovalsBinding binding){
+        db.collection("conferenceRegistrations")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<NewsArticle> abstracts = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            NewsArticle _abstract = new NewsArticle(
+                                    Objects.requireNonNull(document.getData().get("title")).toString(),
+                                    Objects.requireNonNull(document.getData().get("description")).toString(),
+                                    Objects.requireNonNull(document.getData().get("originatorId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("datePosted")).toString(),
+                                    Objects.requireNonNull(document.getData().get("link")).toString()
+                            );
+                            abstracts.add(_abstract);
+                        }
+                        if(abstracts.isEmpty()){
+                            new Utilities().showSnackBar("There are no conference registrations to show", view);
+                        }
+                        ListAdapter listAdapter = new NewsListAdapter(context,abstracts);
+                        binding.listview.setAdapter(listAdapter);
+                        binding.listview.setClickable(true);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
     }
 }
