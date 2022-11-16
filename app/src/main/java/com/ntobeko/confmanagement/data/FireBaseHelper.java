@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
+import com.ntobeko.confmanagement.databinding.FragmentRegisterBinding;
 import com.ntobeko.confmanagement.models.Conference;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import androidx.fragment.app.FragmentActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +24,7 @@ import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
+import com.ntobeko.confmanagement.models.RegisteredAttendees;
 import com.ntobeko.confmanagement.models.User;
 import com.ntobeko.confmanagement.models.Utilities;
 
@@ -45,11 +49,13 @@ public class FireBaseHelper{
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
                     Map<String, Object> userDetails = new HashMap<>();
-                    userDetails.put("user", user);
-                    userDetails.put("role", UserRoles.attendee);
+                    userDetails.put("firstName", user.getFirstName());
+                    userDetails.put("lastName", user.getLastName());
+                    userDetails.put("role", user.getUserRole().name());
+                    userDetails.put("email", user.getLogin().getEmail());
 
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("users").document(Objects.requireNonNull(mAuth.getUid()))
+                    db.collection("Users").document(Objects.requireNonNull(mAuth.getUid()))
                         .set(userDetails)
                         .addOnSuccessListener(aVoid -> {
                             startActivity.startActivity(new Intent(context, AuthActivity.class));
@@ -235,4 +241,75 @@ public class FireBaseHelper{
                     }
                 });
     }
+
+    public void populateConferenceDropdown(View view, Context context, FragmentRegisterBinding binding){
+        db.collection("Conferences")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<Conference> conferences = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            Conference conference = new Conference(
+                                    Objects.requireNonNull(document.getData().get("name")).toString(),
+                                    "Theme : " + Objects.requireNonNull(document.getData().get("theme")),
+                                    "Venue : " + Objects.requireNonNull(document.getData().get("venue")),
+                                    "Date : " + Objects.requireNonNull(document.getData().get("date")),
+                                    "Posted On : " + Objects.requireNonNull(document.getData().get("createdDate"))
+                            );
+                            conferences.add(conference);
+                        }
+                        if(conferences.isEmpty()){
+                            new Utilities().showSnackBar("There are no conferences to show", view);
+                        }
+
+                        String[] conf = new String[conferences.size()];
+
+                        for (int i = 0; i < conf.length; i++) {
+                            conf[i] = conferences.get(i).getName();
+                        }
+                        ArrayAdapter<String> conferenceAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, conf);
+                        conferenceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+                        binding.spinnerConference.setAdapter(conferenceAdapter);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
+    }
+
+    public void populateCoAuthorsDropdown(View view, Context context, FragmentRegisterBinding binding){
+        db.collection("Users")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<RegisteredAttendees> attendees = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            RegisteredAttendees attendee = new RegisteredAttendees(
+                                    Objects.requireNonNull(document.getData().get("firstName")).toString(),
+                                    Objects.requireNonNull(document.getData().get("lastName")).toString()
+                            );
+                            if(!Objects.requireNonNull(document.getData().get("email")).toString().equalsIgnoreCase(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())){
+                                attendees.add(attendee);
+                            }
+
+                        }
+                        if(attendees.isEmpty()){
+                            new Utilities().showSnackBar("There are no registered attendees to show", view);
+                        }
+
+                        String[] att = new String[attendees.size()];
+
+                        for (int i = 0; i < att.length; i++) {
+                            att[i] = attendees.get(i).getLastName() + " " + attendees.get(i).getFirstName();
+                        }
+                        ArrayAdapter<String> coAuthorsAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, att);
+                        coAuthorsAdapter.setDropDownViewResource(android.R.layout.select_dialog_multichoice);
+                        binding.spinnerCoAuthors.setAdapter(coAuthorsAdapter);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
+    }
+
 }

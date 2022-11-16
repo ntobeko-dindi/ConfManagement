@@ -32,7 +32,7 @@ public class User {
         this.lastName = lastName;
     }
 
-    public UserRoles getUserRole(UserRoles attendee) {
+    public UserRoles getUserRole() {
         return userRole;
     }
 

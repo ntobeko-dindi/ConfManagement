@@ -41,24 +41,15 @@ public class RegisterFragment extends Fragment {
                             "Ain't No Stopping Us Now.",
                             "Living The Sales Life."};
 
-        String[] conferences = {"Android",
-                                "Flutter",
-                                "I tried making it with border like below and i tried making it with border like below.",
-                                "React Native"};
-
         String[] coAuthors = {"Dr B. Mutanga", "Mr P. Dlamini"};
 
         ArrayAdapter<String> themeAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, themes);
-        ArrayAdapter<String> conferenceAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, conferences);
-        ArrayAdapter<String> coAuthorsAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, coAuthors);
+        new FireBaseHelper().populateConferenceDropdown(root, getContext(),binding);
+        new FireBaseHelper().populateCoAuthorsDropdown(root, getContext(),binding);
 
         themeAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        conferenceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        coAuthorsAdapter.setDropDownViewResource(android.R.layout.select_dialog_multichoice);
 
         binding.spinnerThemes.setAdapter(themeAdapter);
-        binding.spinnerConference.setAdapter(conferenceAdapter);
-        binding.spinnerCoAuthors.setAdapter(coAuthorsAdapter);
 
         binding.register.setOnClickListener(v -> {
 
