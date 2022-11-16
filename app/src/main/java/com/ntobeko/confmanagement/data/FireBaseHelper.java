@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
@@ -305,6 +306,40 @@ public class FireBaseHelper{
                         ArrayAdapter<String> coAuthorsAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, att);
                         coAuthorsAdapter.setDropDownViewResource(android.R.layout.select_dialog_multichoice);
                         binding.spinnerCoAuthors.setAdapter(coAuthorsAdapter);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
+    }
+
+    public void getAbstractsAwaitingApproval(View view, Context context, FragmentApprovalsBinding binding){
+        db.collection("Abstracts")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<AbstractModel> abstracts = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            AbstractModel _abstract = new AbstractModel(
+                                    Objects.requireNonNull(document.getData().get("researchTopic")).toString(),
+                                    Objects.requireNonNull(document.getData().get("abstractBody")).toString(),
+                                    Objects.requireNonNull(document.getData().get("theme")).toString(),
+                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("submissionDate")).toString(),
+                                    Objects.requireNonNull(document.getData().get("coAuthors")).toString(),
+                                    ProposalStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString())
+                            );
+
+                            if(_abstract.getStatus().name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
+                                abstracts.add(_abstract);
+                            }
+                        }
+                        if(abstracts.isEmpty()){
+                            new Utilities().showSnackBar("There are no abstracts awaiting approval to show", view);
+                        }
+                        ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts);
+                        binding.listview.setAdapter(listAdapter);
+                        binding.listview.setClickable(true);
 
                     } else {
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);

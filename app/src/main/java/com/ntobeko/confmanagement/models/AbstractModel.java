@@ -5,6 +5,20 @@ import com.ntobeko.confmanagement.Enums.ProposalStatus;
 public class AbstractModel {
     private String researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors;
     private ProposalStatus status;
+
+    public AbstractModel() {
+    }
+
+    public AbstractModel(String researchTopic, String abstractBody, String theme, String conferenceId, String submissionDate, String coAuthors, ProposalStatus status) {
+        this.researchTopic = researchTopic;
+        this.abstractBody = abstractBody;
+        this.theme = theme;
+        this.conferenceId = conferenceId;
+        this.submissionDate = submissionDate;
+        this.coAuthors = coAuthors;
+        this.status = status;
+    }
+
     public String getResearchTopic() {
         return researchTopic;
     }
