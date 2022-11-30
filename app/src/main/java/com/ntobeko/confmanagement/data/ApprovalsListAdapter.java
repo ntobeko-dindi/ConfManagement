@@ -5,11 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.models.AbstractModel;
+import com.ntobeko.confmanagement.models.Utilities;
+
 import java.util.ArrayList;
 
 public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
@@ -34,6 +37,20 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         TextView submittedDate = convertView.findViewById(R.id.submissionDate);
         TextView abstractMsg = convertView.findViewById(R.id.abstractBody);
         TextView authors = convertView.findViewById(R.id.authors);
+        TextView hiddenId = convertView.findViewById(R.id.hiddenId);
+        Button approve = convertView.findViewById(R.id.btnApprove);
+        Button rejectButton = convertView.findViewById(R.id.btnReject);
+
+        //set the button actions
+        approve.setOnClickListener(v -> {
+            new Utilities().showSnackBar("approve button clicked", v);
+            new Utilities().showSnackBar("approve button clicked", v);
+        });
+
+        rejectButton.setOnClickListener(v -> {
+            new Utilities().showSnackBar("rejected button clicked", v);
+            new Utilities().showSnackBar("rejected button clicked", v);
+        });
 
         theme.setText(_abstract.getTheme());
         status.setText(_abstract.getStatus().toString());
@@ -41,6 +58,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         submittedDate.setText(_abstract.getSubmissionDate());
         abstractMsg.setText(_abstract.getAbstractBody());
         authors.setText(_abstract.getCoAuthors());
+        hiddenId.setText(_abstract.getAbstractId());
 
         return convertView;
     }

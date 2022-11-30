@@ -173,7 +173,7 @@ public class FireBaseHelper{
         _abstract.put("coAuthors", abstractModel.getCoAuthors());
         _abstract.put("status", abstractModel.getStatus().name());
 
-        db.collection("conferenceRegistrations").document(Objects.requireNonNull(mAuth.getUid()))
+        db.collection("conferenceRegistrations").document(Objects.requireNonNull(mAuth.getUid()) + abstractModel.getConferenceId())
                 .set(_abstract)
                 .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Conference Posted", view))
                 .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the conference", view));
@@ -314,7 +314,7 @@ public class FireBaseHelper{
     }
 
     public void getAbstractsAwaitingApproval(View view, Context context, FragmentApprovalsBinding binding){
-        db.collection("Abstracts")
+        db.collection("conferenceRegistrations")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -329,7 +329,7 @@ public class FireBaseHelper{
                                     Objects.requireNonNull(document.getData().get("coAuthors")).toString(),
                                     ProposalStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString())
                             );
-
+                            _abstract.setAbstractId(document.getId());
                             if(_abstract.getStatus().name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
                                 abstracts.add(_abstract);
                             }
