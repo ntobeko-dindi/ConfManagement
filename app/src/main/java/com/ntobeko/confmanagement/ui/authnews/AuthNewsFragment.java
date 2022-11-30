@@ -20,7 +20,7 @@ public class AuthNewsFragment extends Fragment {
 
         binding = FragmentAuthnewsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        new FireBaseHelper().getAuthNews(root, getContext(), binding);
+        new FireBaseHelper().getAuthNews(root, getContext(), binding,getActivity());
         return root;
     }
 

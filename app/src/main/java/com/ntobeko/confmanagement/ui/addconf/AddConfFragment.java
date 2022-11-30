@@ -38,7 +38,7 @@ public class AddConfFragment extends Fragment {
                 return;
             }
             Conference conference = new Conference(name,theme,venue,date, new LocalDate().getLocalDateTime());
-            new FireBaseHelper().addNewConference(conference, root);
+            new FireBaseHelper().addNewConference(conference, root,getActivity());
         });
 
         return root;

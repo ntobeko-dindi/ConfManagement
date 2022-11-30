@@ -23,6 +23,7 @@ import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
+import com.ntobeko.confmanagement.models.LoadingDialog;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
 import com.ntobeko.confmanagement.models.RegisteredAttendees;
@@ -46,6 +47,8 @@ public class FireBaseHelper{
     }
 
     public void createUser(User user, View view, FragmentActivity startActivity, Context context){
+        LoadingDialog dialog = new LoadingDialog(startActivity);
+        dialog.showLoader();
         mAuth.createUserWithEmailAndPassword(user.getLogin().getEmail(), user.getLogin().getPassword())
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
@@ -59,11 +62,13 @@ public class FireBaseHelper{
                     db.collection("Users").document(Objects.requireNonNull(mAuth.getUid()))
                         .set(userDetails)
                         .addOnSuccessListener(aVoid -> {
+                            dialog.dismissLoader();
                             startActivity.startActivity(new Intent(context, AuthActivity.class));
                             startActivity.finish();
                         })
-                        .addOnFailureListener(e -> {});
+                        .addOnFailureListener(e -> dialog.dismissLoader());
                 }else {
+                    dialog.dismissLoader();
                     new Utilities().showSnackBar("Failed to create user", view);
                 }
             });
@@ -75,12 +80,16 @@ public class FireBaseHelper{
     }
 
     public void login(Login user, View view, FragmentActivity startActivity, Context context, Activity endActivity){
+        LoadingDialog dialog = new LoadingDialog(startActivity);
+        dialog.showLoader();
         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
+                    dialog.dismissLoader();
                     startActivity.startActivity(new Intent(context, endActivity.getClass()));
                     startActivity.finish();
                 } else {
+                    dialog.dismissLoader();
                     new Utilities().showSnackBar(Objects.requireNonNull(task.getException()).getMessage(), view);
                 }
             });
@@ -92,7 +101,9 @@ public class FireBaseHelper{
         startActivity.finish();
     }
 
-    public void addNewsArticle(NewsArticle newsArticle, View view){
+    public void addNewsArticle(NewsArticle newsArticle, View view, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         Map<String, Object> article = new HashMap<>();
         article.put("title", newsArticle.getTitle());
         article.put("description", newsArticle.getDescription());
@@ -102,11 +113,13 @@ public class FireBaseHelper{
 
         db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()) + "(" + newsArticle.getDatePosted() + ")")
             .set(article)
-            .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Article Posted", view))
-            .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the article", view));
+            .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Article Posted", view);dialog.dismissLoader();})
+            .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while posting the article", view);dialog.dismissLoader();});
     }
 
-    public void getArticles(View view, Context context, FragmentNewsBinding binding){
+    public void getArticles(View view, Context context, FragmentNewsBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("articles")
             .get()
             .addOnCompleteListener(task -> {
@@ -128,14 +141,17 @@ public class FireBaseHelper{
                     ListAdapter listAdapter = new NewsListAdapter(context,articles);
                     binding.listview.setAdapter(listAdapter);
                     binding.listview.setClickable(true);
-
+                    dialog.dismissLoader();
                 } else {
+                    dialog.dismissLoader();
                     new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                 }
             });
     }
 
-    public void getAuthNews(View view, Context context, FragmentAuthnewsBinding binding){
+    public void getAuthNews(View view, Context context, FragmentAuthnewsBinding binding,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("articles")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -157,13 +173,16 @@ public class FireBaseHelper{
                         ListAdapter listAdapter = new NewsListAdapter(context,articles);
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
-    public void registerForConference(AbstractModel abstractModel, View view){
+    public void registerForConference(AbstractModel abstractModel, View view,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         Map<String, Object> _abstract = new HashMap<>();
         _abstract.put("researchTopic", abstractModel.getResearchTopic());
         _abstract.put("abstractBody", abstractModel.getAbstractBody());
@@ -173,13 +192,15 @@ public class FireBaseHelper{
         _abstract.put("coAuthors", abstractModel.getCoAuthors());
         _abstract.put("status", abstractModel.getStatus().name());
 
-        db.collection("conferenceRegistrations").document(Objects.requireNonNull(mAuth.getUid()))
+        db.collection("conferenceRegistrations").document(Objects.requireNonNull(mAuth.getUid()) + abstractModel.getConferenceId())
                 .set(_abstract)
-                .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Conference Posted", view))
-                .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the conference", view));
+                .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Conference Posted", view);dialog.dismissLoader();})
+                .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while posting the conference", view);dialog.dismissLoader();});
     }
 
-    public void getAbstracts(View view, Context context, FragmentApprovalsBinding binding){
+    public void getAbstracts(View view, Context context, FragmentApprovalsBinding binding,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("conferenceRegistrations")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -201,20 +222,25 @@ public class FireBaseHelper{
                         ListAdapter listAdapter = new NewsListAdapter(context,abstracts);
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void addNewConference(Conference conference, View view){
+    public void addNewConference(Conference conference, View view,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Conferences").document(Objects.requireNonNull(mAuth.getUid()) + "(" + conference.getCreatedDate() + ")")
                 .set(conference)
-                .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Conference Created", view))
-                .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while creating the conference", view));
+                .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Conference Created", view);dialog.dismissLoader();})
+                .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while creating the conference", view);dialog.dismissLoader();});
     }
-    public void getConferences(View view, Context context, FragmentConferencesBinding binding){
+    public void getConferences(View view, Context context, FragmentConferencesBinding binding,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Conferences")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -236,14 +262,17 @@ public class FireBaseHelper{
                         ListAdapter listAdapter = new ConferencesListAdapter(context, conferences);
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void populateConferenceDropdown(View view, Context context, FragmentRegisterBinding binding){
+    public void populateConferenceDropdown(View view, Context context, FragmentRegisterBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Conferences")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -271,14 +300,17 @@ public class FireBaseHelper{
                         ArrayAdapter<String> conferenceAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, conf);
                         conferenceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                         binding.spinnerConference.setAdapter(conferenceAdapter);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void populateCoAuthorsDropdown(View view, Context context, FragmentRegisterBinding binding){
+    public void populateCoAuthorsDropdown(View view, Context context, FragmentRegisterBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Users")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -306,15 +338,18 @@ public class FireBaseHelper{
                         ArrayAdapter<String> coAuthorsAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, att);
                         coAuthorsAdapter.setDropDownViewResource(android.R.layout.select_dialog_multichoice);
                         binding.spinnerCoAuthors.setAdapter(coAuthorsAdapter);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void getAbstractsAwaitingApproval(View view, Context context, FragmentApprovalsBinding binding){
-        db.collection("Abstracts")
+    public void getAbstractsAwaitingApproval(View view, Context context, FragmentApprovalsBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
+        db.collection("conferenceRegistrations")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -329,7 +364,7 @@ public class FireBaseHelper{
                                     Objects.requireNonNull(document.getData().get("coAuthors")).toString(),
                                     ProposalStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString())
                             );
-
+                            _abstract.setAbstractId(document.getId());
                             if(_abstract.getStatus().name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
                                 abstracts.add(_abstract);
                             }
@@ -340,8 +375,10 @@ public class FireBaseHelper{
                         ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts);
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
+                        dialog.dismissLoader();
 
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });

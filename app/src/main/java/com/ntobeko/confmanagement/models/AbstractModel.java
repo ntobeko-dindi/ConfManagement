@@ -3,7 +3,7 @@ package com.ntobeko.confmanagement.models;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 
 public class AbstractModel {
-    private String researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors;
+    private String researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors, abstractId;
     private ProposalStatus status;
 
     public AbstractModel() {
@@ -61,4 +61,6 @@ public class AbstractModel {
     public void setCoAuthors(String coAuthors) {
         this.coAuthors = coAuthors;
     }
+    public String getAbstractId() {return abstractId;}
+    public void setAbstractId(String abstractId) {this.abstractId = abstractId;}
 }

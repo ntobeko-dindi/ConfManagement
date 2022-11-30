@@ -29,7 +29,7 @@ public class ConferencesFragment extends Fragment {
         binding = FragmentConferencesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        new FireBaseHelper().getConferences(root, getContext(), binding);
+        new FireBaseHelper().getConferences(root, getContext(), binding, getActivity());
         return root;
     }
 

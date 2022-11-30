@@ -4,19 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.ntobeko.confmanagement.Enums.ProposalStatus;
-import com.ntobeko.confmanagement.data.ApprovalsListAdapter;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
-import com.ntobeko.confmanagement.models.AbstractModel;
-import com.ntobeko.confmanagement.models.LocalDate;
-
-import java.util.ArrayList;
 
 public class ApprovalsFragment extends Fragment {
 
@@ -27,16 +20,7 @@ public class ApprovalsFragment extends Fragment {
 
         binding = FragmentApprovalsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-
-//        abstractModel.setTheme("Educational research");
-//        abstractModel.setCoAuthors("Authors : Mr Ntobeko Dindi, et al");
-//        abstractModel.setStatus(ProposalStatus.Submitted);
-//        abstractModel.setResearchTopic("The effect of online leaning in universities");
-//        abstractModel.setSubmissionDate("Submitted on : " + new LocalDate().getLocalDateTime());
-//        abstractModel.setAbstractBody("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
-
-        new FireBaseHelper().getAbstractsAwaitingApproval(root,getContext(),binding);
+        new FireBaseHelper().getAbstractsAwaitingApproval(root,getContext(),binding, getActivity());
         return root;
     }
 

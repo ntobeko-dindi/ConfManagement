@@ -44,8 +44,8 @@ public class RegisterFragment extends Fragment {
         String[] coAuthors = {"Dr B. Mutanga", "Mr P. Dlamini"};
 
         ArrayAdapter<String> themeAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, themes);
-        new FireBaseHelper().populateConferenceDropdown(root, getContext(),binding);
-        new FireBaseHelper().populateCoAuthorsDropdown(root, getContext(),binding);
+        new FireBaseHelper().populateConferenceDropdown(root, getContext(),binding,getActivity());
+        new FireBaseHelper().populateCoAuthorsDropdown(root, getContext(),binding, getActivity());
 
         themeAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
@@ -80,7 +80,7 @@ public class RegisterFragment extends Fragment {
             model.setCoAuthors(_coAuthors);
             model.setTheme(theme);
 
-            new FireBaseHelper().registerForConference(model, root);
+            new FireBaseHelper().registerForConference(model, root,getActivity());
         });
         return root;
     }
