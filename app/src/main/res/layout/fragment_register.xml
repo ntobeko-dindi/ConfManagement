@@ -119,6 +119,24 @@
                             android:textStyle="normal" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <Button
+                        android:id="@+id/chooseFile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="62dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="62dp"
+                        android:elevation="0dp"
+                        android:gravity="center"
+                        android:drawableLeft="@drawable/ic_baseline_attach_file_24"
+                        android:text="@string/upload_abstract_instead"
+                        android:textAllCaps="false"
+                        android:textColor="@color/textColor"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/grey"
+                        app:shapeAppearanceOverlay="@style/Button5" />
+
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                         android:layout_width="match_parent"
