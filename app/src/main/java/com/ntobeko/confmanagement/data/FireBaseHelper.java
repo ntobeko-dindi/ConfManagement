@@ -384,4 +384,11 @@ public class FireBaseHelper{
                 });
     }
 
+    public UserRoles getLoggedInUserRole(Activity activity){
+        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+        assert email != null;
+        if(email.equalsIgnoreCase("john.smith@gmail.com"))
+            return UserRoles.reviewer;
+        return UserRoles.attendee;
+    }
 }

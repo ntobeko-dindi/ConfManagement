@@ -119,6 +119,7 @@
                             android:inputType="textMultiLine"
                             android:id="@+id/conferenceDate"
                             android:ems="10"
+                            android:focusable="false"
                             android:textSize="13sp"
                             android:textStyle="normal"
                             android:layout_width="match_parent"

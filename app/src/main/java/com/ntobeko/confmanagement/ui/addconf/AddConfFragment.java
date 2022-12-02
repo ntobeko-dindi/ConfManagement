@@ -1,5 +1,7 @@
 package com.ntobeko.confmanagement.ui.addconf;
 
+import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import com.ntobeko.confmanagement.models.Conference;
 import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.Utilities;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class AddConfFragment extends Fragment {
@@ -39,6 +42,13 @@ public class AddConfFragment extends Fragment {
             }
             Conference conference = new Conference(name,theme,venue,date, new LocalDate().getLocalDateTime());
             new FireBaseHelper().addNewConference(conference, root,getActivity());
+        });
+
+        binding.conferenceDate.setOnClickListener(v -> {
+            @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (view, year, month, dayOfMonth) -> binding.conferenceDate.setText(year + "/" + month + "/" + dayOfMonth), 1900 + new Date().getYear(),new Date().getMonth(),new Date().getDate());
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            datePickerDialog.show();
+
         });
 
         return root;
