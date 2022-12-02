@@ -259,7 +259,8 @@ public class FireBaseHelper{
                         if(conferences.isEmpty()){
                             new Utilities().showSnackBar("There are no conferences to show", view);
                         }
-                        ListAdapter listAdapter = new ConferencesListAdapter(context, conferences);
+
+                        ListAdapter listAdapter = new ConferencesListAdapter(context, new ArrayList<>(Utilities.reverseList(conferences)));
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
                         dialog.dismissLoader();
