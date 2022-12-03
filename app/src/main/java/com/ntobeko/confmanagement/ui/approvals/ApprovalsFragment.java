@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
-import com.ntobeko.confmanagement.models.ConferenceAttendance;
 
 public class ApprovalsFragment extends Fragment {
 

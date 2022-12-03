@@ -43,12 +43,12 @@
 
     <fragment
         android:id="@+id/nav_approved"
-        android:name="com.ntobeko.confmanagement.ui.approvals.ApprovalsFragment"
+        android:name="com.ntobeko.confmanagement.ui.approved.ApprovedFragment"
         android:label="@string/menu_approval"
         tools:layout="@layout/fragment_approvals" />
     <fragment
         android:id="@+id/nav_rejected"
-        android:name="com.ntobeko.confmanagement.ui.approvals.ApprovalsFragment"
+        android:name="com.ntobeko.confmanagement.ui.rejected.RejectedFragment"
         android:label="@string/menu_approval"
         tools:layout="@layout/fragment_approvals" />
 </navigation>

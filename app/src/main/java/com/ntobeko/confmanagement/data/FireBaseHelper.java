@@ -1,6 +1,7 @@
 package com.ntobeko.confmanagement.data;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -19,10 +20,12 @@ import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
+import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentRegisterBinding;
+import com.ntobeko.confmanagement.databinding.FragmentRejectedBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.Conference;
@@ -355,7 +358,7 @@ public class FireBaseHelper{
                 });
     }
 
-    public void getAbstractsPendingApprovals(View view, Context context, FragmentApprovalsBinding binding, Activity activity, ProposalStatus proposalStatus){
+    public void getAbstractsPendingApprovals(View view, Context context, Object binding, Activity activity, ProposalStatus proposalStatus){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
         db.collection("AbstractRegistrations")
@@ -375,17 +378,33 @@ public class FireBaseHelper{
                             );
                             _abstract.setAbstractId(document.getId());
                             _abstract.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
-                            new Utilities().showSnackBar(proposalStatus.name(), view);
+
                             if(_abstract.getStatus().name().equalsIgnoreCase(proposalStatus.name())){
                                 abstracts.add(_abstract);
                             }
                         }
                         if(abstracts.isEmpty()){
                             new Utilities().showSnackBar("There are no abstracts to show", view);
+                        }else{
+                            if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
+                                FragmentApprovalsBinding bind = (FragmentApprovalsBinding) binding;
+                                ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts, bind, activity);
+                                ((FragmentApprovalsBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentApprovalsBinding) binding).listview.setClickable(true);
+                            }else
+                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Rejected.name())){
+                                FragmentRejectedBinding bind = (FragmentRejectedBinding) binding;
+                                ListAdapter listAdapter = new RejectedListAdapter(context,abstracts, bind, activity);
+                                ((FragmentRejectedBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentRejectedBinding) binding).listview.setClickable(true);
+                            }else
+                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Approved.name())){
+                                FragmentApprovedBinding bind = (FragmentApprovedBinding) binding;
+                                ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts, bind, activity);
+                                ((FragmentApprovedBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentApprovedBinding) binding).listview.setClickable(true);
+                            }
                         }
-                        ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts, binding, activity);
-                        binding.listview.setAdapter(listAdapter);
-                        binding.listview.setClickable(true);
                         dialog.dismissLoader();
 
                     } else {
