@@ -323,12 +323,12 @@ public class FireBaseHelper{
                         ArrayList<ConferenceAttendance> attendees = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             ConferenceAttendance attendee = new ConferenceAttendance(
-                                    Objects.requireNonNull(document.getData().get("userId")).toString(),
+                                    //Objects.requireNonNull(document.getData().get("userId")).toString(),
                                     Objects.requireNonNull(document.getData().get("lastName")).toString(),
-                                    Objects.requireNonNull(document.getData().get("firstName")).toString(),
-                                    ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()),
-                                    Objects.requireNonNull(document.getData().get("registeredDate")).toString(),
-                                    Objects.requireNonNull(document.getData().get("isCoAuthor")).toString()
+                                    Objects.requireNonNull(document.getData().get("firstName")).toString()
+                                    //ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()),
+                                    //Objects.requireNonNull(document.getData().get("registeredDate")).toString(),
+                                    //Objects.requireNonNull(document.getData().get("isCoAuthor")).toString()
                             );
                             if(!Objects.requireNonNull(document.getData().get("email")).toString().equalsIgnoreCase(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())){
                                 attendees.add(attendee);

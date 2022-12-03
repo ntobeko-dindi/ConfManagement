@@ -15,6 +15,11 @@ public class ConferenceAttendance {
         this.isCoAuthor = isCoAuthor;
     }
 
+    public ConferenceAttendance(String lastName, String firstName) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+    }
+
     public String getId() {
         return id;
     }
