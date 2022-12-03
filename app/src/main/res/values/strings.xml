@@ -59,4 +59,6 @@
     <string name="conference_venue">Conference Venue</string>
     <string name="conference_date">Conference Date</string>
     <string name="conference_name">Conference Name</string>
+    <string name="loading">Loading…</string>
+    <string name="upload_abstract_instead">Upload abstract instead</string>
 </resources>

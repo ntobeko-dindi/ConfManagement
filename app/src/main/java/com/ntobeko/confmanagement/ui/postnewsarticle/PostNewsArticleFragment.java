@@ -40,7 +40,7 @@ public class PostNewsArticleFragment extends Fragment {
                 return;
             }
             NewsArticle article = new NewsArticle(title,body, mAuth.getUid(), new LocalDate().getLocalDateTime(), url);
-            new FireBaseHelper().addNewsArticle(article, root);
+            new FireBaseHelper().addNewsArticle(article, root,getActivity());
         });
 
         return root;

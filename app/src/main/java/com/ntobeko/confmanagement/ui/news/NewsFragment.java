@@ -24,7 +24,7 @@ public class NewsFragment extends Fragment {
         binding = FragmentNewsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        new FireBaseHelper().getArticles(root, getContext(), binding);
+        new FireBaseHelper().getArticles(root, getContext(), binding,getActivity());
         return root;
     }
 

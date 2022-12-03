@@ -1,5 +1,8 @@
 package com.ntobeko.confmanagement.ui.register;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,6 +27,7 @@ import java.util.Objects;
 public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
+    private final int CHOOSE_PDF_FROM_DEVICE = 1001;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,14 +49,15 @@ public class RegisterFragment extends Fragment {
         String[] coAuthors = {"Dr B. Mutanga", "Mr P. Dlamini"};
 
         ArrayAdapter<String> themeAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, themes);
-        new FireBaseHelper().populateConferenceDropdown(root, getContext(),binding);
-        new FireBaseHelper().populateCoAuthorsDropdown(root, getContext(),binding);
+        new FireBaseHelper().populateConferenceDropdown(root, getContext(),binding,getActivity());
+        new FireBaseHelper().populateCoAuthorsDropdown(root, getContext(),binding, getActivity());
 
         themeAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
         binding.spinnerThemes.setAdapter(themeAdapter);
 
         binding.register.setOnClickListener(v -> {
+
             String conference = binding.spinnerConference.getText().toString();
             String title = Objects.requireNonNull(binding.researchTopic.getText()).toString();
             String theme = binding.spinnerThemes.getText().toString();
@@ -79,9 +85,27 @@ public class RegisterFragment extends Fragment {
             model.setCoAuthors(_coAuthors);
             model.setTheme(theme);
 
-            new FireBaseHelper().submitConferenceAbstract(model, root);
+            new FireBaseHelper().registerForConference(model, root,getActivity());
         });
+
+        binding.chooseFile.setOnClickListener(v -> chooseFileFromDevice());
+
         return root;
+    }
+
+    private void chooseFileFromDevice(){
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/pdf");
+        startActivityForResult(intent, CHOOSE_PDF_FROM_DEVICE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == CHOOSE_PDF_FROM_DEVICE && resultCode == RESULT_OK){
+            new Utilities().showSnackBar("Path is :=> " + data.getData(),getView());
+        }
     }
 
     @Override

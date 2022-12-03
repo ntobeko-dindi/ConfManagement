@@ -4,13 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.databinding.FragmentRegisterBinding;
-import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.Conference;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,14 +19,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
+import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
-import com.ntobeko.confmanagement.models.ConferenceApproval;
-import com.ntobeko.confmanagement.models.ConferenceAttendanceApproval;
+import com.ntobeko.confmanagement.models.LoadingDialog;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
-import com.ntobeko.confmanagement.models.ConferenceAttendance;
+import com.ntobeko.confmanagement.models.RegisteredAttendees;
 import com.ntobeko.confmanagement.models.User;
 import com.ntobeko.confmanagement.models.Utilities;
 
@@ -49,6 +47,8 @@ public class FireBaseHelper{
     }
 
     public void createUser(User user, View view, FragmentActivity startActivity, Context context){
+        LoadingDialog dialog = new LoadingDialog(startActivity);
+        dialog.showLoader();
         mAuth.createUserWithEmailAndPassword(user.getLogin().getEmail(), user.getLogin().getPassword())
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
@@ -62,11 +62,13 @@ public class FireBaseHelper{
                     db.collection("Users").document(Objects.requireNonNull(mAuth.getUid()))
                         .set(userDetails)
                         .addOnSuccessListener(aVoid -> {
+                            dialog.dismissLoader();
                             startActivity.startActivity(new Intent(context, AuthActivity.class));
                             startActivity.finish();
                         })
-                        .addOnFailureListener(e -> {});
+                        .addOnFailureListener(e -> dialog.dismissLoader());
                 }else {
+                    dialog.dismissLoader();
                     new Utilities().showSnackBar("Failed to create user", view);
                 }
             });
@@ -78,12 +80,16 @@ public class FireBaseHelper{
     }
 
     public void login(Login user, View view, FragmentActivity startActivity, Context context, Activity endActivity){
+        LoadingDialog dialog = new LoadingDialog(startActivity);
+        dialog.showLoader();
         mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
+                    dialog.dismissLoader();
                     startActivity.startActivity(new Intent(context, endActivity.getClass()));
                     startActivity.finish();
                 } else {
+                    dialog.dismissLoader();
                     new Utilities().showSnackBar(Objects.requireNonNull(task.getException()).getMessage(), view);
                 }
             });
@@ -95,7 +101,9 @@ public class FireBaseHelper{
         startActivity.finish();
     }
 
-    public void addNewsArticle(NewsArticle newsArticle, View view){
+    public void addNewsArticle(NewsArticle newsArticle, View view, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         Map<String, Object> article = new HashMap<>();
         article.put("title", newsArticle.getTitle());
         article.put("description", newsArticle.getDescription());
@@ -105,11 +113,13 @@ public class FireBaseHelper{
 
         db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()) + "(" + newsArticle.getDatePosted() + ")")
             .set(article)
-            .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Article Posted", view))
-            .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the article", view));
+            .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Article Posted", view);dialog.dismissLoader();})
+            .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while posting the article", view);dialog.dismissLoader();});
     }
 
-    public void getArticles(View view, Context context, FragmentNewsBinding binding){
+    public void getArticles(View view, Context context, FragmentNewsBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("articles")
             .get()
             .addOnCompleteListener(task -> {
@@ -131,14 +141,17 @@ public class FireBaseHelper{
                     ListAdapter listAdapter = new NewsListAdapter(context,articles);
                     binding.listview.setAdapter(listAdapter);
                     binding.listview.setClickable(true);
-
+                    dialog.dismissLoader();
                 } else {
+                    dialog.dismissLoader();
                     new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                 }
             });
     }
 
-    public void getAuthNews(View view, Context context, FragmentAuthnewsBinding binding){
+    public void getAuthNews(View view, Context context, FragmentAuthnewsBinding binding,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("articles")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -160,15 +173,17 @@ public class FireBaseHelper{
                         ListAdapter listAdapter = new NewsListAdapter(context,articles);
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
-    public void submitConferenceAbstract(AbstractModel abstractModel, View view){
+    public void registerForConference(AbstractModel abstractModel, View view,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         Map<String, Object> _abstract = new HashMap<>();
-        _abstract.put("userId", Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         _abstract.put("researchTopic", abstractModel.getResearchTopic());
         _abstract.put("abstractBody", abstractModel.getAbstractBody());
         _abstract.put("theme", abstractModel.getTheme());
@@ -177,13 +192,15 @@ public class FireBaseHelper{
         _abstract.put("coAuthors", abstractModel.getCoAuthors());
         _abstract.put("status", abstractModel.getStatus().name());
 
-        db.collection("AbstractRegistrations").document(Objects.requireNonNull(mAuth.getUid()) + abstractModel.getConferenceId())
+        db.collection("conferenceRegistrations").document(Objects.requireNonNull(mAuth.getUid()) + abstractModel.getConferenceId())
                 .set(_abstract)
-                .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Conference Posted", view))
-                .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while posting the conference", view));
+                .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Conference Posted", view);dialog.dismissLoader();})
+                .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while posting the conference", view);dialog.dismissLoader();});
     }
 
-    public void getAbstracts(View view, Context context, FragmentApprovalsBinding binding){
+    public void getAbstracts(View view, Context context, FragmentApprovalsBinding binding,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("conferenceRegistrations")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -205,43 +222,25 @@ public class FireBaseHelper{
                         ListAdapter listAdapter = new NewsListAdapter(context,abstracts);
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void addNewConference(Conference conference, View view){
+    public void addNewConference(Conference conference, View view,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Conferences").document(Objects.requireNonNull(mAuth.getUid()) + "(" + conference.getCreatedDate() + ")")
                 .set(conference)
-                .addOnSuccessListener(aVoid -> new Utilities().showSnackBar("Conference Created", view))
-                .addOnFailureListener(e -> new Utilities().showSnackBar("Error occurred while creating the conference", view));
+                .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Conference Created", view);dialog.dismissLoader();})
+                .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while creating the conference", view);dialog.dismissLoader();});
     }
-
-    public void approveAbstract(AbstractApproval conferenceAbstract, View view, String successMsg, String failureMsg){
-        db.collection("ConferenceApprovals").document(Objects.requireNonNull(mAuth.getUid()))
-                .set(conferenceAbstract)
-                .addOnSuccessListener(aVoid -> {
-                    db.collection("AbstractRegistrations").document(conferenceAbstract.getAbstractId()).update("status", conferenceAbstract.getDecisionStatus())
-                            .addOnSuccessListener(a -> new Utilities().showSnackBar(successMsg, view))
-                            .addOnFailureListener(b -> new Utilities().showSnackBar(failureMsg, view));
-                    new Utilities().showSnackBar(successMsg, view);
-                });
-    }
-
-    public void approveConferenceAttendance(ConferenceAttendanceApproval confAttendanceApproval, View view, String successMsg, String failureMsg){
-        db.collection("ConferenceAttendanceApprovals").document(Objects.requireNonNull(mAuth.getUid()))
-                .set(confAttendanceApproval)
-                .addOnSuccessListener(aVoid -> {
-                    db.collection("ConferenceAttendances").document(confAttendanceApproval.getAttendanceId()).update("status", confAttendanceApproval.getDecisionStatus())
-                            .addOnSuccessListener(a -> new Utilities().showSnackBar(successMsg, view))
-                            .addOnFailureListener(b -> new Utilities().showSnackBar(failureMsg, view));
-                    new Utilities().showSnackBar(successMsg, view);
-                });
-    }
-
-    public void getConferences(View view, Context context, FragmentConferencesBinding binding){
+    public void getConferences(View view, Context context, FragmentConferencesBinding binding,Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Conferences")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -260,17 +259,21 @@ public class FireBaseHelper{
                         if(conferences.isEmpty()){
                             new Utilities().showSnackBar("There are no conferences to show", view);
                         }
-                        ListAdapter listAdapter = new ConferencesListAdapter(context, conferences);
+
+                        ListAdapter listAdapter = new ConferencesListAdapter(context, new ArrayList<>(Utilities.reverseList(conferences)));
                         binding.listview.setAdapter(listAdapter);
                         binding.listview.setClickable(true);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void populateConferenceDropdown(View view, Context context, FragmentRegisterBinding binding){
+    public void populateConferenceDropdown(View view, Context context, FragmentRegisterBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Conferences")
                 .get()
                 .addOnCompleteListener(task -> {
@@ -298,30 +301,28 @@ public class FireBaseHelper{
                         ArrayAdapter<String> conferenceAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, conf);
                         conferenceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                         binding.spinnerConference.setAdapter(conferenceAdapter);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void populateCoAuthorsDropdown(View view, Context context, FragmentRegisterBinding binding){
+    public void populateCoAuthorsDropdown(View view, Context context, FragmentRegisterBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
         db.collection("Users")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        ArrayList<ConferenceAttendance> attendees = new ArrayList<>();
+                        ArrayList<RegisteredAttendees> attendees = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            ConferenceAttendance attendee = new ConferenceAttendance(
-                                    Objects.requireNonNull(document.getData().get("userId")).toString(),
+                            RegisteredAttendees attendee = new RegisteredAttendees(
                                     Objects.requireNonNull(document.getData().get("firstName")).toString(),
-                                    Objects.requireNonNull(document.getData().get("lastName")).toString(),
-                                    ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()),
-                                    Objects.requireNonNull(document.getData().get("registeredDate")).toString(),
-                                    Objects.requireNonNull(document.getData().get("isCoAuthor")).toString()
+                                    Objects.requireNonNull(document.getData().get("lastName")).toString()
                             );
-                            if(!Objects.requireNonNull(document.getData().get("email")).toString().equalsIgnoreCase(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())
-                                && Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("isCoAuthor")).toString())){
+                            if(!Objects.requireNonNull(document.getData().get("email")).toString().equalsIgnoreCase(Objects.requireNonNull(mAuth.getCurrentUser()).getEmail())){
                                 attendees.add(attendee);
                             }
 
@@ -338,79 +339,57 @@ public class FireBaseHelper{
                         ArrayAdapter<String> coAuthorsAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, att);
                         coAuthorsAdapter.setDropDownViewResource(android.R.layout.select_dialog_multichoice);
                         binding.spinnerCoAuthors.setAdapter(coAuthorsAdapter);
-
+                        dialog.dismissLoader();
                     } else {
+                        dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
     }
 
-    public void getAbstractsPendingApprovals(View view, Context context, FragmentApprovalsBinding binding){
-        db.collection("AbstractRegistrations")
-            .get()
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    ArrayList<AbstractModel> abstracts = new ArrayList<>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        AbstractModel _abstract = new AbstractModel(
-                                Objects.requireNonNull(document.getData().get("researchTopic")).toString(),
-                                Objects.requireNonNull(document.getData().get("abstractBody")).toString(),
-                                Objects.requireNonNull(document.getData().get("theme")).toString(),
-                                Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
-                                Objects.requireNonNull(document.getData().get("submissionDate")).toString(),
-                                Objects.requireNonNull(document.getData().get("coAuthors")).toString(),
-                                ProposalStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString())
-                        );
-                        _abstract.setAbstractId(document.getId());
-                        _abstract.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
-                        if(_abstract.getStatus().name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
-                            abstracts.add(_abstract);
+    public void getAbstractsAwaitingApproval(View view, Context context, FragmentApprovalsBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
+        db.collection("conferenceRegistrations")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<AbstractModel> abstracts = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            AbstractModel _abstract = new AbstractModel(
+                                    Objects.requireNonNull(document.getData().get("researchTopic")).toString(),
+                                    Objects.requireNonNull(document.getData().get("abstractBody")).toString(),
+                                    Objects.requireNonNull(document.getData().get("theme")).toString(),
+                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("submissionDate")).toString(),
+                                    Objects.requireNonNull(document.getData().get("coAuthors")).toString(),
+                                    ProposalStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString())
+                            );
+                            _abstract.setAbstractId(document.getId());
+                            if(_abstract.getStatus().name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
+                                abstracts.add(_abstract);
+                            }
                         }
-                    }
-                    if(abstracts.isEmpty()){
-                        new Utilities().showSnackBar("There are no abstracts approvals to show", view);
-                    }
-                    ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts);
-                    binding.listview.setAdapter(listAdapter);
-                    binding.listview.setClickable(true);
+                        if(abstracts.isEmpty()){
+                            new Utilities().showSnackBar("There are no abstracts awaiting approval to show", view);
+                        }
+                        ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts);
+                        binding.listview.setAdapter(listAdapter);
+                        binding.listview.setClickable(true);
+                        dialog.dismissLoader();
 
-                } else {
-                    new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
-                }
-            });
+                    } else {
+                        dialog.dismissLoader();
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
     }
 
-//    public void getConferenceAttendeePendingApprovals(View view, Context context, FragmentApprovalsBinding binding){
-//        db.collection("ConferenceAttendances")
-//                .get()
-//                .addOnCompleteListener(task -> {
-//                    if (task.isSuccessful()) {
-//                        ArrayList<ConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
-//                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            ConferenceAttendance _pendingAttendeeApproval = new ConferenceAttendance(
-//                                    Objects.requireNonNull(document.getData().get("userId")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("firstName")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("lastName")).toString(),
-//                                    ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()),
-//                                    Objects.requireNonNull(document.getData().get("registeredDate")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("isCoAuthor")).toString()
-//                            );
-//                            _pendingAttendeeApproval.setAttendanceId(document.getId());
-//                            if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted.name())){
-//                                attendanceApprovalsPending.add(_pendingAttendeeApproval);
-//                            }
-//                        }
-//                        if(attendanceApprovalsPending.isEmpty()){
-//                            new Utilities().showSnackBar("There are no conference attendance approvals to show", view);
-//                        }
-//                        ListAdapter listAdapter = new ApprovalsListAdapter(context, attendanceApprovalsPending);
-//                        binding.listview.setAdapter(listAdapter);
-//                        binding.listview.setClickable(true);
-//
-//                    } else {
-//                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
-//                    }
-//                });
-//    }
-
+    public UserRoles getLoggedInUserRole(Activity activity){
+        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
+        assert email != null;
+        if(email.equalsIgnoreCase("john.smith@gmail.com"))
+            return UserRoles.reviewer;
+        return UserRoles.attendee;
+    }
 }
