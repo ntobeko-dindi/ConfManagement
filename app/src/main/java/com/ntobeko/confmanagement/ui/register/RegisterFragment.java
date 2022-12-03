@@ -85,7 +85,7 @@ public class RegisterFragment extends Fragment {
             model.setCoAuthors(_coAuthors);
             model.setTheme(theme);
 
-            new FireBaseHelper().registerForConference(model, root,getActivity());
+            new FireBaseHelper().submitConferenceAbstract(model, root,getActivity());
         });
 
         binding.chooseFile.setOnClickListener(v -> chooseFileFromDevice());

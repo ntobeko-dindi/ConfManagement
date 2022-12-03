@@ -1,5 +1,6 @@
 package com.ntobeko.confmanagement.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.R;
+import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.ConferenceApproval;
@@ -22,8 +24,12 @@ import java.util.ArrayList;
 
 public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
 
-    public ApprovalsListAdapter(Context context, ArrayList<AbstractModel> list){
+    private FragmentApprovalsBinding fragmentApprovalsBinding;
+    private Activity activity;
+    public ApprovalsListAdapter(Context context, ArrayList<AbstractModel> list, FragmentApprovalsBinding fragmentApprovalsBinding, Activity activity){
         super(context, R.layout.approvals_list_view,list);
+        this.fragmentApprovalsBinding = fragmentApprovalsBinding;
+        this.activity = activity;
     }
 
     @NonNull
@@ -55,7 +61,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
 
             successMsg = "Conference attendance approved";
             failureMsg = "Error occurred while approving conference attendance";
-            new FireBaseHelper().approveAbstract(approveAbstract, finalConvertView, successMsg, failureMsg);
+            new FireBaseHelper().approveAbstract(approveAbstract, finalConvertView, successMsg, failureMsg,getContext(), fragmentApprovalsBinding,activity);
 
             //Check Dropdown Value if it is Attendance or Abstract Approval
 //            if(false) {
@@ -77,7 +83,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
 
             String successMsg = "Conference abstract rejected";
             String failureMsg = "Error occurred while rejecting conference abstract";
-            new FireBaseHelper().approveAbstract(rejectAbstract, finalConvertView, successMsg, failureMsg);
+            new FireBaseHelper().approveAbstract(rejectAbstract, finalConvertView, successMsg, failureMsg, getContext(), fragmentApprovalsBinding,activity);
 
 //            if(false) {
 //                String successMsg = "Conference attendance rejected";
