@@ -22,6 +22,6 @@ public class Utilities {
 
     public static String getCurrentUserRoleFromSharedPreferences(Context context){
         SharedPreferences pref = context.getSharedPreferences("currentUserRole", MODE_PRIVATE);
-        return pref.getString("role", null);
+        return pref.getString("role", "");
     }
 }

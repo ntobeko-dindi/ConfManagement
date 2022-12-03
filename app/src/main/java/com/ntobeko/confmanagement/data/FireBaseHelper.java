@@ -122,7 +122,7 @@ public class FireBaseHelper{
         article.put("datePosted", newsArticle.getDatePosted());
         article.put("link", newsArticle.getLink());
 
-        db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()) + "(" + newsArticle.getDatePosted() + ")")
+        db.collection("news").document()
             .set(article)
             .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Article Posted", view);dialog.dismissLoader();})
             .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while posting the article", view);dialog.dismissLoader();});
@@ -131,11 +131,11 @@ public class FireBaseHelper{
     public void getArticles(View view, Context context, FragmentNewsBinding binding, Activity activity){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
-        db.collection("articles")
+        db.collection("news")
             .get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    ArrayList<NewsArticle> articles = new ArrayList<>();
+                    ArrayList<NewsArticle> news = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         NewsArticle article = new NewsArticle(
                                 Objects.requireNonNull(document.getData().get("title")).toString(),
@@ -144,12 +144,12 @@ public class FireBaseHelper{
                                 Objects.requireNonNull(document.getData().get("datePosted")).toString(),
                                 Objects.requireNonNull(document.getData().get("link")).toString()
                         );
-                        articles.add(article);
+                        news.add(article);
                     }
-                    if(articles.isEmpty()){
+                    if(news.isEmpty()){
                         new Utilities().showSnackBar("There are no news to show", view);
                     }
-                    ListAdapter listAdapter = new NewsListAdapter(context,articles);
+                    ListAdapter listAdapter = new NewsListAdapter(context,news);
                     binding.listview.setAdapter(listAdapter);
                     binding.listview.setClickable(true);
                     dialog.dismissLoader();
@@ -163,7 +163,7 @@ public class FireBaseHelper{
     public void getAuthNews(View view, Context context, FragmentAuthnewsBinding binding,Activity activity){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
-        db.collection("articles")
+        db.collection("news")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

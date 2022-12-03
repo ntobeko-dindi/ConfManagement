@@ -30,7 +30,7 @@ public class NewsListAdapter extends ArrayAdapter<NewsArticle> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.news_list_view,parent,false);
         }
 
-        TextView title = convertView.findViewById(R.id.txt_title);
+        TextView title = convertView.findViewById(R.id.title);
         TextView msg = convertView.findViewById(R.id.description);
 
         title.setText(article.getTitle());
