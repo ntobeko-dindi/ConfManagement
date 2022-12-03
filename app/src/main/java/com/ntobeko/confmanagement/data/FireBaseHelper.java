@@ -74,6 +74,7 @@ public class FireBaseHelper{
                         .set(userDetails)
                         .addOnSuccessListener(aVoid -> {
                             dialog.dismissLoader();
+                            this.getLoggedInUserRole(view, context);
                             startActivity.startActivity(new Intent(context, AuthActivity.class));
                             startActivity.finish();
                         })
@@ -97,6 +98,7 @@ public class FireBaseHelper{
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
                     dialog.dismissLoader();
+                    this.getLoggedInUserRole(view, context);
                     startActivity.startActivity(new Intent(context, endActivity.getClass()));
                     startActivity.finish();
                 } else {

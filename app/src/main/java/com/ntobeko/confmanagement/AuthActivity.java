@@ -28,7 +28,10 @@ public class AuthActivity extends AppCompatActivity {
         com.ntobeko.confmanagement.databinding.ActivityAuthBinding binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         setSupportActionBar(binding.appBarAuth.toolbar);
-        binding.appBarAuth.fab.setOnClickListener(view -> new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity()));
+        binding.appBarAuth.fab.setOnClickListener(view -> {
+            new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity());
+            Utilities.clearCurrentUserRoleFromSharedPreferences(getApplicationContext());
+        });
 
         String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getApplicationContext());
 
@@ -36,7 +39,7 @@ public class AuthActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
             mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected)
+                    R.id.nav_gallery, R.id.nav_home, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected)
                     .setOpenableLayout(drawer)
                     .build();
 
@@ -44,17 +47,24 @@ public class AuthActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        Menu menu =navigationView.getMenu();
+
         if(currentUserRole.equalsIgnoreCase(UserRoles.attendee.name())){
-            Menu menu =navigationView.getMenu();
             MenuItem createConf = menu.findItem(R.id.nav_addconf);
             MenuItem approve = menu.findItem(R.id.nav_home);
             MenuItem approved = menu.findItem(R.id.nav_approved);
             MenuItem rejected = menu.findItem(R.id.nav_rejected);
+            MenuItem postNews = menu.findItem(R.id.nav_slideshow);
 
             createConf.setVisible(false);
             approved.setVisible(false);
             rejected.setVisible(false);
             approve.setVisible(false);
+            postNews.setVisible(false);
+        }else{
+            MenuItem register = menu.findItem(R.id.nav_gallery);
+
+            register.setVisible(false);
         }
     }
 
