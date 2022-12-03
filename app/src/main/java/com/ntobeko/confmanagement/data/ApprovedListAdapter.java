@@ -49,6 +49,7 @@ public class ApprovedListAdapter extends ArrayAdapter<AbstractModel> {
         TextView abstractMsg = convertView.findViewById(R.id.abstractBody);
         TextView authors = convertView.findViewById(R.id.authors);
         TextView hiddenId = convertView.findViewById(R.id.hiddenId);
+        Button rejectButton = convertView.findViewById(R.id.btnReject);
         Button approveButton = convertView.findViewById(R.id.btnApprove);
 
         theme.setText(_abstract.getTheme());
@@ -60,6 +61,7 @@ public class ApprovedListAdapter extends ArrayAdapter<AbstractModel> {
         hiddenId.setText(_abstract.getAbstractId());
 
         approveButton.setVisibility(View.GONE);
+        rejectButton.setVisibility(View.GONE);
 
         return convertView;
     }

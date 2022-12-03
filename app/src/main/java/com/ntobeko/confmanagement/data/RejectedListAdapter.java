@@ -47,6 +47,7 @@ public class RejectedListAdapter extends ArrayAdapter<AbstractModel> {
         TextView authors = convertView.findViewById(R.id.authors);
         TextView hiddenId = convertView.findViewById(R.id.hiddenId);
         Button rejectButton = convertView.findViewById(R.id.btnReject);
+        Button approveButton = convertView.findViewById(R.id.btnApprove);
 
         theme.setText(_abstract.getTheme());
         status.setText(_abstract.getStatus().toString());
@@ -56,6 +57,7 @@ public class RejectedListAdapter extends ArrayAdapter<AbstractModel> {
         authors.setText(_abstract.getCoAuthors());
         hiddenId.setText(_abstract.getAbstractId());
 
+        approveButton.setVisibility(View.GONE);
         rejectButton.setVisibility(View.GONE);
 
         return convertView;
