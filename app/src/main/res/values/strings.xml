@@ -61,4 +61,7 @@
     <string name="conference_name">Conference Name</string>
     <string name="loading">Loading…</string>
     <string name="upload_abstract_instead">Upload abstract instead</string>
+    <string name="approved_abstracts">Approved Abstracts</string>
+    <string name="rejected_abstracts">Rejected Abstracts</string>
+    <string name="history">History</string>
 </resources>

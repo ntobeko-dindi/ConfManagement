@@ -28,5 +28,17 @@
             android:id="@+id/nav_conferences"
             android:icon="@drawable/ic_notifications_black_24dp"
             android:title="@string/title_conferences" />
+        <item android:title="@string/history">
+            <menu>
+                <item
+                    android:id="@+id/nav_approved"
+                    android:icon="@drawable/ic_baseline_check_circle_24"
+                    android:title="@string/approved_abstracts" />
+                <item
+                    android:id="@+id/nav_rejected"
+                    android:icon="@drawable/ic_baseline_cancel_24"
+                    android:title="@string/rejected_abstracts" />
+            </menu>
+        </item>
     </group>
 </menu>

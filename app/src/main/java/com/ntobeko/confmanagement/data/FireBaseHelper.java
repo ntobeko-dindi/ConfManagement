@@ -355,7 +355,7 @@ public class FireBaseHelper{
                 });
     }
 
-    public void getAbstractsPendingApprovals(View view, Context context, FragmentApprovalsBinding binding, Activity activity){
+    public void getAbstractsPendingApprovals(View view, Context context, FragmentApprovalsBinding binding, Activity activity, ProposalStatus proposalStatus){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
         db.collection("AbstractRegistrations")
@@ -375,12 +375,13 @@ public class FireBaseHelper{
                             );
                             _abstract.setAbstractId(document.getId());
                             _abstract.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
-                            if(_abstract.getStatus().name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
+                            new Utilities().showSnackBar(proposalStatus.name(), view);
+                            if(_abstract.getStatus().name().equalsIgnoreCase(proposalStatus.name())){
                                 abstracts.add(_abstract);
                             }
                         }
                         if(abstracts.isEmpty()){
-                            new Utilities().showSnackBar("There are no abstracts awaiting approval to show", view);
+                            new Utilities().showSnackBar("There are no abstracts to show", view);
                         }
                         ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts, binding, activity);
                         binding.listview.setAdapter(listAdapter);
@@ -399,7 +400,7 @@ public class FireBaseHelper{
                 .set(conferenceAbstract)
                 .addOnSuccessListener(aVoid -> {
                     db.collection("AbstractRegistrations").document(conferenceAbstract.getAbstractId()).update("status", conferenceAbstract.getDecisionStatus())
-                            .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view); this.getAbstractsPendingApprovals(view,context,binding,activity);})
+                            .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view); this.getAbstractsPendingApprovals(view,context,binding,activity,ProposalStatus.Submitted);})
                             .addOnFailureListener(b -> new Utilities().showSnackBar(failureMsg, view));
                     new Utilities().showSnackBar(successMsg, view);
                 });
