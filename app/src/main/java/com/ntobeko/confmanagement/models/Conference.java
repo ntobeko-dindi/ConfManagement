@@ -1,7 +1,7 @@
 package com.ntobeko.confmanagement.models;
 
 public class Conference {
-    private String name, theme, venue, date, createdDate;
+    private String id, name, theme, venue, date, createdDate;
 
     public Conference(String name, String theme, String venue, String date, String createdDate) {
         this.name = name;
@@ -9,6 +9,14 @@ public class Conference {
         this.venue = venue;
         this.date = date;
         this.createdDate = createdDate;
+    }
+
+    public String getConferenceId() {
+        return id;
+    }
+
+    public void setConferenceId(String conferenceId) {
+        this.id = conferenceId;
     }
 
     public Conference(){}

@@ -9,8 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.R;
+import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
+import com.ntobeko.confmanagement.models.ConferenceApproval;
+import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.Utilities;
 
 import java.util.ArrayList;
@@ -42,14 +47,48 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         Button rejectButton = convertView.findViewById(R.id.btnReject);
 
         //set the button actions
+        View finalConvertView = convertView;
         approve.setOnClickListener(v -> {
-            new Utilities().showSnackBar("approve button clicked", v);
-            new Utilities().showSnackBar("approve button clicked", v);
+            AbstractApproval approveAbstract = new AbstractApproval(hiddenId.getText().toString(), ProposalStatus.Approved.name(), new LocalDate().getLocalDateTime());
+            String successMsg;
+            String failureMsg;
+
+            successMsg = "Conference attendance approved";
+            failureMsg = "Error occurred while approving conference attendance";
+            new FireBaseHelper().approveAbstract(approveAbstract, finalConvertView, successMsg, failureMsg);
+
+            //Check Dropdown Value if it is Attendance or Abstract Approval
+//            if(false) {
+//                successMsg = "Conference attendance approved";
+//                failureMsg = "Error occurred while approving conference attendance";
+//                approveConference.setDecisionStatus(ProposalStatus.Approved.name());
+//                new FireBaseHelper().approveAbstract(approveConference, finalConvertView, successMsg, failureMsg);
+//            }else {
+//                successMsg = "Conference abstract approved";
+//                failureMsg = "Error occurred while approving conference abstract";
+//                approveConference.setDecisionStatus(ProposalStatus.Rejected.name());
+//                new FireBaseHelper().approveAbstract(approveConference, finalConvertView, successMsg, failureMsg);
+//            }
+
         });
 
         rejectButton.setOnClickListener(v -> {
-            new Utilities().showSnackBar("rejected button clicked", v);
-            new Utilities().showSnackBar("rejected button clicked", v);
+            AbstractApproval rejectAbstract = new AbstractApproval(hiddenId.getText().toString(), ProposalStatus.Rejected.toString(), new LocalDate().getLocalDateTime());
+
+            String successMsg = "Conference abstract rejected";
+            String failureMsg = "Error occurred while rejecting conference abstract";
+            new FireBaseHelper().approveAbstract(rejectAbstract, finalConvertView, successMsg, failureMsg);
+
+//            if(false) {
+//                String successMsg = "Conference attendance rejected";
+//                String failureMsg = "Error occurred while rejecting conference attendance";
+//                new FireBaseHelper().approveAbstract(rejectConference, finalConvertView, successMsg, failureMsg);
+//            }else{
+//                String successMsg = "Conference abstract rejected";
+//                String failureMsg = "Error occurred while rejecting conference abstract";
+//                new FireBaseHelper().approveAbstract(rejectConference, finalConvertView, successMsg, failureMsg);
+//            }
+
         });
 
         theme.setText(_abstract.getTheme());

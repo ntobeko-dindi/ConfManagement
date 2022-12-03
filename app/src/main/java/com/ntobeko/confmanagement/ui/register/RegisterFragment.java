@@ -52,7 +52,6 @@ public class RegisterFragment extends Fragment {
         binding.spinnerThemes.setAdapter(themeAdapter);
 
         binding.register.setOnClickListener(v -> {
-
             String conference = binding.spinnerConference.getText().toString();
             String title = Objects.requireNonNull(binding.researchTopic.getText()).toString();
             String theme = binding.spinnerThemes.getText().toString();
@@ -80,7 +79,7 @@ public class RegisterFragment extends Fragment {
             model.setCoAuthors(_coAuthors);
             model.setTheme(theme);
 
-            new FireBaseHelper().registerForConference(model, root);
+            new FireBaseHelper().submitConferenceAbstract(model, root);
         });
         return root;
     }

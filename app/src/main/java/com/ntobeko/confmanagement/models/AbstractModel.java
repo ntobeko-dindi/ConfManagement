@@ -3,10 +3,18 @@ package com.ntobeko.confmanagement.models;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 
 public class AbstractModel {
-    private String researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors, abstractId;
+    private String id, userId, researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors;
     private ProposalStatus status;
 
     public AbstractModel() {
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public AbstractModel(String researchTopic, String abstractBody, String theme, String conferenceId, String submissionDate, String coAuthors, ProposalStatus status) {
@@ -18,6 +26,7 @@ public class AbstractModel {
         this.coAuthors = coAuthors;
         this.status = status;
     }
+
 
     public String getResearchTopic() {
         return researchTopic;
@@ -61,6 +70,6 @@ public class AbstractModel {
     public void setCoAuthors(String coAuthors) {
         this.coAuthors = coAuthors;
     }
-    public String getAbstractId() {return abstractId;}
-    public void setAbstractId(String abstractId) {this.abstractId = abstractId;}
+    public String getAbstractId() {return id;}
+    public void setAbstractId(String abstractId) {this.id = abstractId;}
 }

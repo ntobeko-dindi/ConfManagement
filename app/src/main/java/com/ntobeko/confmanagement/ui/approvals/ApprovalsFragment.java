@@ -27,7 +27,9 @@ public class ApprovalsFragment extends Fragment {
 
         binding = FragmentApprovalsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        new FireBaseHelper().getAbstractsAwaitingApproval(root,getContext(),binding);
+        new FireBaseHelper().getAbstractsPendingApprovals(root,getContext(),binding);
+        //new FireBaseHelper().getConferenceAttendeePendingApprovals(root,getContext(),binding);
+
         return root;
     }
 
