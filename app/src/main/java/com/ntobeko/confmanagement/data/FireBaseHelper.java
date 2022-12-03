@@ -1,7 +1,6 @@
 package com.ntobeko.confmanagement.data;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -15,7 +14,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
-import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.R;
@@ -394,13 +392,13 @@ public class FireBaseHelper{
                             }else
                                 if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Rejected.name())){
                                 FragmentRejectedBinding bind = (FragmentRejectedBinding) binding;
-                                ListAdapter listAdapter = new RejectedListAdapter(context,abstracts, bind, activity);
+                                ListAdapter listAdapter = new RejectedListAdapter(context,abstracts);
                                 ((FragmentRejectedBinding) binding).listview.setAdapter(listAdapter);
                                 ((FragmentRejectedBinding) binding).listview.setClickable(true);
                             }else
                                 if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Approved.name())){
                                 FragmentApprovedBinding bind = (FragmentApprovedBinding) binding;
-                                ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts, bind, activity);
+                                ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts);
                                 ((FragmentApprovedBinding) binding).listview.setAdapter(listAdapter);
                                 ((FragmentApprovedBinding) binding).listview.setClickable(true);
                             }

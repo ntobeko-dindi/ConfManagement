@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -16,16 +17,14 @@ import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
-import com.ntobeko.confmanagement.models.ConferenceApproval;
 import com.ntobeko.confmanagement.models.LocalDate;
-import com.ntobeko.confmanagement.models.Utilities;
 
 import java.util.ArrayList;
 
 public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
 
-    private FragmentApprovalsBinding fragmentApprovalsBinding;
-    private Activity activity;
+    private final FragmentApprovalsBinding fragmentApprovalsBinding;
+    private final Activity activity;
     public ApprovalsListAdapter(Context context, ArrayList<AbstractModel> list, FragmentApprovalsBinding fragmentApprovalsBinding, Activity activity){
         super(context, R.layout.approvals_list_view,list);
         this.fragmentApprovalsBinding = fragmentApprovalsBinding;

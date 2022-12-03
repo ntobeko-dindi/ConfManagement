@@ -1,6 +1,5 @@
 package com.ntobeko.confmanagement.data;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ntobeko.confmanagement.R;
-import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
-import com.ntobeko.confmanagement.databinding.FragmentRejectedBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
 
 import java.util.ArrayList;
 
 public class RejectedListAdapter extends ArrayAdapter<AbstractModel> {
 
-    private FragmentRejectedBinding fragmentRejectedBinding;
-    private Activity activity;
-    public RejectedListAdapter(Context context, ArrayList<AbstractModel> list, FragmentRejectedBinding fragmentRejectedBinding, Activity activity){
+    public RejectedListAdapter(Context context, ArrayList<AbstractModel> list){
         super(context, R.layout.approvals_list_view,list);
-        this.fragmentRejectedBinding = fragmentRejectedBinding;
-        this.activity = activity;
     }
 
     @NonNull

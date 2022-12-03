@@ -1,6 +1,5 @@
 package com.ntobeko.confmanagement.data;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,24 +11,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.R;
-import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
-import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
-import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
-import com.ntobeko.confmanagement.models.LocalDate;
 
 import java.util.ArrayList;
 
 public class ApprovedListAdapter extends ArrayAdapter<AbstractModel> {
 
-    private FragmentApprovedBinding fragmentApprovalsBinding;
-    private Activity activity;
-    public ApprovedListAdapter(Context context, ArrayList<AbstractModel> list, FragmentApprovedBinding fragmentApprovalsBinding, Activity activity){
+    public ApprovedListAdapter(Context context, ArrayList<AbstractModel> list){
         super(context, R.layout.approvals_list_view,list);
-        this.fragmentApprovalsBinding = fragmentApprovalsBinding;
-        this.activity = activity;
     }
 
     @NonNull
