@@ -1,8 +1,11 @@
 package com.ntobeko.confmanagement.data;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -15,7 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
-import com.ntobeko.confmanagement.Enums.UserRoles;
+import com.ntobeko.confmanagement.MainActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
@@ -48,6 +51,10 @@ public class FireBaseHelper{
     public FireBaseHelper(){
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+    }
+
+    public FirebaseAuth getmAuth() {
+        return mAuth;
     }
 
     public void createUser(User user, View view, FragmentActivity startActivity, Context context){
@@ -466,11 +473,25 @@ public class FireBaseHelper{
 //                    }
 //                });
 //    }
-    public UserRoles getLoggedInUserRole(Activity activity){
-        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
-        assert email != null;
-        if(email.equalsIgnoreCase("john.smith@gmail.com"))
-            return UserRoles.reviewer;
-        return UserRoles.attendee;
+    public void getLoggedInUserRole(View view, Context context){
+        String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        db.collection("Users")
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if(document.getId().equalsIgnoreCase(currentUserId)){
+                            String role = Objects.requireNonNull(document.getData().get("role")).toString();
+                            SharedPreferences pref = context.getSharedPreferences("currentUserRole", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("role", role);
+                            editor.apply();
+                        }
+                    }
+                } else {
+                    new Utilities().showSnackBar(Objects.requireNonNull(task.getException()).getMessage(), view);
+                }
+            });
     }
 }

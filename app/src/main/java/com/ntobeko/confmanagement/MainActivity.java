@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         if(new FireBaseHelper().isLoggedIn()){
+            new FireBaseHelper().getLoggedInUserRole(binding.navView, getApplicationContext());
             startActivity(new Intent(MainActivity.this, AuthActivity.class));
             finish();
         }

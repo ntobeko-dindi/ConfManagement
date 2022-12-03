@@ -1,7 +1,10 @@
 package com.ntobeko.confmanagement;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -12,8 +15,11 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
+import com.ntobeko.confmanagement.data.SQLiteHelper;
 import com.ntobeko.confmanagement.databinding.ActivityAuthBinding;
+import com.ntobeko.confmanagement.models.Utilities;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -25,10 +31,10 @@ public class AuthActivity extends AppCompatActivity {
 
         com.ntobeko.confmanagement.databinding.ActivityAuthBinding binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setSupportActionBar(binding.appBarAuth.toolbar);
-
         binding.appBarAuth.fab.setOnClickListener(view -> new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity()));
+
+        String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getApplicationContext());
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
@@ -39,6 +45,19 @@ public class AuthActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_auth);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        if(currentUserRole.equalsIgnoreCase(UserRoles.attendee.name())){
+            Menu menu =navigationView.getMenu();
+            MenuItem createConf = menu.findItem(R.id.nav_addconf);
+            MenuItem approve = menu.findItem(R.id.nav_home);
+            MenuItem approved = menu.findItem(R.id.nav_approved);
+            MenuItem rejected = menu.findItem(R.id.nav_rejected);
+
+            createConf.setVisible(false);
+            approved.setVisible(false);
+            rejected.setVisible(false);
+            approve.setVisible(false);
+        }
     }
 
     @Override
