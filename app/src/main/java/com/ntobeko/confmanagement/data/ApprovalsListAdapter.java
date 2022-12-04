@@ -61,6 +61,9 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         Button pdf = convertView.findViewById(R.id.openAbstractPdf);
         TextView abstractPdfDownloadUrl = convertView.findViewById(R.id.hiddenAbstractPdfDownloadUrl);
 
+        Button openProofOfPayment = convertView.findViewById(R.id.openProofOfPayment);
+        TextView downloadProofOfPaymentUrl = convertView.findViewById(R.id.downloadProofOfPaymentUrl);
+
         String canApprove = "1";
 
         if(currentUserRole.equalsIgnoreCase(UserRoles.attendee.name())){
@@ -73,6 +76,15 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         pdf.setOnClickListener(v -> {
              Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
+            i.putExtra("hiddenConfId",hiddenConfId.getText());
+            i.putExtra("canApprove", finalCanApprove);
+            activity.startActivity(i);
+        });
+
+
+        openProofOfPayment.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), PdfViewerActivity.class);
+            i.putExtra("abstractPdfDownloadUrl", downloadProofOfPaymentUrl.getText());
             i.putExtra("hiddenConfId",hiddenConfId.getText());
             i.putExtra("canApprove", finalCanApprove);
             activity.startActivity(i);
@@ -131,6 +143,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         authors.setText(_abstract.getCoAuthors());
         hiddenConfId.setText(_abstract.getAbstractId());
         abstractPdfDownloadUrl.setText(_abstract.getAbstractPdfDownloadUrl());
+        downloadProofOfPaymentUrl.setText(_abstract.getDownloadProofOfPaymentUrl());
 
         if(_abstract.getAbstractPdfDownloadUrl().equalsIgnoreCase("")){
             pdf.setVisibility(View.GONE);

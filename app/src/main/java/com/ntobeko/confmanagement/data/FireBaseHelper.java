@@ -211,6 +211,7 @@ public class FireBaseHelper{
         _abstract.put("coAuthors", abstractModel.getCoAuthors());
         _abstract.put("status", abstractModel.getStatus().name());
         _abstract.put("abstractPdfDownloadUrl", abstractModel.getAbstractPdfDownloadUrl());
+        _abstract.put("downloadProofOfPaymentUrl", abstractModel.getDownloadProofOfPaymentUrl());
 
         db.collection("AbstractRegistrations").document()
                 .set(_abstract)
@@ -411,6 +412,7 @@ public class FireBaseHelper{
                             );
                             _abstract.setAbstractId(document.getId());
                             _abstract.setAbstractPdfDownloadUrl((String) document.getData().get("abstractPdfDownloadUrl"));
+                            _abstract.setDownloadProofOfPaymentUrl((String) document.getData().get("downloadProofOfPaymentUrl"));
                             _abstract.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
 
                             if(_abstract.getStatus().name().equalsIgnoreCase(proposalStatus.name())){

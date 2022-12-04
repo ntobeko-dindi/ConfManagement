@@ -22,7 +22,7 @@ public class FireBaseStorageHelper {
         mStorageRef = FirebaseStorage.getInstance().getReference();
     }
 
-    public void uploadImage(Uri file, Activity activity, String storageRefPath, View view) {
+    public void uploadImage(Uri file, Activity activity, String storageRefPath, View view, String docName) {
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
         StorageReference riversRef = mStorageRef.child(storageRefPath);
@@ -33,11 +33,16 @@ public class FireBaseStorageHelper {
                 TextView textView = view.findViewById(R.id.abstractBody);
                 Button button = view.findViewById(R.id.chooseFile);
                 TextView url = view.findViewById(R.id.hiddenConfIds);
+                TextView url2 = view.findViewById(R.id.downloadProofOfPaymentUrl);
 
                 textView.setVisibility(View.GONE);
                 button.setVisibility(View.GONE);
                 taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnCompleteListener(task -> {
-                    url.setText(task.getResult().toString());
+                   if(docName.equalsIgnoreCase("payment")){
+                       url2.setText(task.getResult().toString());
+                   }else{
+                       url.setText(task.getResult().toString());
+                   }
                 });
             })
             .addOnFailureListener(exception -> dialog.dismissLoader())

@@ -43,10 +43,12 @@ public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding binding;
     private final int CHOOSE_PDF_FROM_DEVICE = 1001;
     private StorageReference mStorageRef;
+    String docName = null;
 
     String selectedConfId ;
 
     String selectedRegType = "";
+    String folderName = "";
     Boolean isAbstractSubmission = false;
 
     @SuppressLint("NonConstantResourceId")
@@ -163,6 +165,7 @@ public class RegisterFragment extends Fragment {
                 model.setCoAuthors(_coAuthors);
                 model.setTheme(theme);
                 model.setAbstractPdfDownloadUrl(binding.hiddenConfIds.getText().toString());
+                model.setDownloadProofOfPaymentUrl(binding.downloadProofOfPaymentUrl.getText().toString());
 
                 if(!binding.hiddenConfIds.getText().toString().substring(0,5).equalsIgnoreCase("https")){
                     model.setAbstractPdfDownloadUrl("");
@@ -171,11 +174,24 @@ public class RegisterFragment extends Fragment {
                 new FireBaseHelper().submitConferenceAbstract(model, root,getActivity());
             }
         });
+
         binding.chooseFile.setOnClickListener(v -> {
             if(binding.spinnerConference.getText().toString().equals("")){
                 new Utilities().showSnackBar("Please Select A Conference", root);
                 return;
             }
+            docName = "abstract";
+            folderName = "Abstracts";
+            chooseFileFromDevice();
+        });
+
+        binding.uploadProofOfPayment.setOnClickListener(v -> {
+            if(binding.spinnerConference.getText().toString().equals("")){
+                new Utilities().showSnackBar("Please Select A Conference", root);
+                return;
+            }
+            docName = "payment";
+            folderName = "Payments";
             chooseFileFromDevice();
         });
         return root;
@@ -192,11 +208,11 @@ public class RegisterFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        String storageRefPath = "Abstracts/" + selectedConfId + "/" + Objects.requireNonNull(new FireBaseHelper().getmAuth().getCurrentUser()).getUid() + "/" + "abstract";
+        String storageRefPath = folderName + "/" + selectedConfId + "/" + Objects.requireNonNull(new FireBaseHelper().getmAuth().getCurrentUser()).getUid() + "/" + docName;
 
         if(requestCode == CHOOSE_PDF_FROM_DEVICE && resultCode == RESULT_OK){
             assert data != null;
-            new FireBaseStorageHelper().uploadImage(data.getData(),getActivity(),storageRefPath,getView());
+            new FireBaseStorageHelper().uploadImage(data.getData(),getActivity(),storageRefPath,getView(), docName);
         }
     }
 

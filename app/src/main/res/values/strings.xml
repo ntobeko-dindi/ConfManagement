@@ -75,4 +75,6 @@
     <string name="coauthor">CoAuthor</string>
     <string name="open_pdf">Open Pdf</string>
     <string name="back">Back</string>
+    <string name="open_proof_of_payment">Proof of Payment</string>
+    <string name="upload_proof_of_payment">Upload Proof of Payment</string>
 </resources>
