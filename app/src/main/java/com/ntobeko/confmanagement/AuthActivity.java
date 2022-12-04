@@ -2,18 +2,20 @@ package com.ntobeko.confmanagement;
 
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
-import com.google.android.material.navigation.NavigationView;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.navigation.NavigationView;
+import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.ActivityAuthBinding;
+import com.ntobeko.confmanagement.models.Utilities;
 
 public class AuthActivity extends AppCompatActivity {
 
@@ -25,20 +27,45 @@ public class AuthActivity extends AppCompatActivity {
 
         com.ntobeko.confmanagement.databinding.ActivityAuthBinding binding = ActivityAuthBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         setSupportActionBar(binding.appBarAuth.toolbar);
+        binding.appBarAuth.fab.setOnClickListener(view -> {
+            new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity());
+            Utilities.clearCurrentUserRoleFromSharedPreferences(getApplicationContext());
+        });
 
-        binding.appBarAuth.fab.setOnClickListener(view -> new FireBaseHelper().logout(this,getApplicationContext(), new MainActivity()));
+        String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getApplicationContext());
 
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected)
-                .setOpenableLayout(drawer)
-                .build();
+
+            mAppBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.nav_gallery, R.id.nav_home, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected)
+                    .setOpenableLayout(drawer)
+                    .build();
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_auth);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Menu menu =navigationView.getMenu();
+
+        if(currentUserRole.equalsIgnoreCase(UserRoles.attendee.name())){
+            MenuItem createConf = menu.findItem(R.id.nav_addconf);
+            MenuItem approve = menu.findItem(R.id.nav_home);
+            MenuItem approved = menu.findItem(R.id.nav_approved);
+            MenuItem rejected = menu.findItem(R.id.nav_rejected);
+            MenuItem postNews = menu.findItem(R.id.nav_slideshow);
+
+            createConf.setVisible(false);
+            approved.setVisible(false);
+            rejected.setVisible(false);
+            approve.setVisible(false);
+            postNews.setVisible(false);
+        }else{
+            MenuItem register = menu.findItem(R.id.nav_gallery);
+
+            register.setVisible(false);
+        }
     }
 
     @Override

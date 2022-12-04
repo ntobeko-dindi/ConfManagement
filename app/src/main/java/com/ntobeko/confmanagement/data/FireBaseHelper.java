@@ -1,8 +1,11 @@
 package com.ntobeko.confmanagement.data;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -14,15 +17,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
-import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
-import com.ntobeko.confmanagement.Enums.UserRoles;
+import com.ntobeko.confmanagement.MainActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
+import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentRegisterBinding;
+import com.ntobeko.confmanagement.databinding.FragmentRejectedBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.Conference;
@@ -50,6 +54,10 @@ public class FireBaseHelper{
         db = FirebaseFirestore.getInstance();
     }
 
+    public FirebaseAuth getmAuth() {
+        return mAuth;
+    }
+
     public void createUser(User user, View view, FragmentActivity startActivity, Context context){
         LoadingDialog dialog = new LoadingDialog(startActivity);
         dialog.showLoader();
@@ -67,6 +75,7 @@ public class FireBaseHelper{
                         .set(userDetails)
                         .addOnSuccessListener(aVoid -> {
                             dialog.dismissLoader();
+                            this.getLoggedInUserRole(view, context);
                             startActivity.startActivity(new Intent(context, AuthActivity.class));
                             startActivity.finish();
                         })
@@ -90,6 +99,7 @@ public class FireBaseHelper{
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
                     dialog.dismissLoader();
+                    this.getLoggedInUserRole(view, context);
                     startActivity.startActivity(new Intent(context, endActivity.getClass()));
                     startActivity.finish();
                 } else {
@@ -115,7 +125,7 @@ public class FireBaseHelper{
         article.put("datePosted", newsArticle.getDatePosted());
         article.put("link", newsArticle.getLink());
 
-        db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()) + "(" + newsArticle.getDatePosted() + ")")
+        db.collection("news").document()
             .set(article)
             .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Article Posted", view);dialog.dismissLoader();})
             .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while posting the article", view);dialog.dismissLoader();});
@@ -124,11 +134,11 @@ public class FireBaseHelper{
     public void getArticles(View view, Context context, FragmentNewsBinding binding, Activity activity){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
-        db.collection("articles")
+        db.collection("news")
             .get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    ArrayList<NewsArticle> articles = new ArrayList<>();
+                    ArrayList<NewsArticle> news = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         NewsArticle article = new NewsArticle(
                                 Objects.requireNonNull(document.getData().get("title")).toString(),
@@ -137,12 +147,12 @@ public class FireBaseHelper{
                                 Objects.requireNonNull(document.getData().get("datePosted")).toString(),
                                 Objects.requireNonNull(document.getData().get("link")).toString()
                         );
-                        articles.add(article);
+                        news.add(article);
                     }
-                    if(articles.isEmpty()){
+                    if(news.isEmpty()){
                         new Utilities().showSnackBar("There are no news to show", view);
                     }
-                    ListAdapter listAdapter = new NewsListAdapter(context,articles);
+                    ListAdapter listAdapter = new NewsListAdapter(context,news);
                     binding.listview.setAdapter(listAdapter);
                     binding.listview.setClickable(true);
                     dialog.dismissLoader();
@@ -156,7 +166,7 @@ public class FireBaseHelper{
     public void getAuthNews(View view, Context context, FragmentAuthnewsBinding binding,Activity activity){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
-        db.collection("articles")
+        db.collection("news")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -369,7 +379,7 @@ public class FireBaseHelper{
                 });
     }
 
-    public void getAbstractsPendingApprovals(View view, Context context, FragmentApprovalsBinding binding, Activity activity, ProposalStatus proposalStatus){
+    public void getAbstractsPendingApprovals(View view, Context context, Object binding, Activity activity, ProposalStatus proposalStatus){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
         db.collection("AbstractRegistrations")
@@ -389,17 +399,33 @@ public class FireBaseHelper{
                             );
                             _abstract.setAbstractId(document.getId());
                             _abstract.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
-                            new Utilities().showSnackBar(proposalStatus.name(), view);
+
                             if(_abstract.getStatus().name().equalsIgnoreCase(proposalStatus.name())){
                                 abstracts.add(_abstract);
                             }
                         }
                         if(abstracts.isEmpty()){
                             new Utilities().showSnackBar("There are no abstracts to show", view);
+                        }else{
+                            if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
+                                FragmentApprovalsBinding bind = (FragmentApprovalsBinding) binding;
+                                ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts, bind, activity);
+                                ((FragmentApprovalsBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentApprovalsBinding) binding).listview.setClickable(true);
+                            }else
+                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Rejected.name())){
+                                FragmentRejectedBinding bind = (FragmentRejectedBinding) binding;
+                                ListAdapter listAdapter = new RejectedListAdapter(context,abstracts);
+                                ((FragmentRejectedBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentRejectedBinding) binding).listview.setClickable(true);
+                            }else
+                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Approved.name())){
+                                FragmentApprovedBinding bind = (FragmentApprovedBinding) binding;
+                                ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts);
+                                ((FragmentApprovedBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentApprovedBinding) binding).listview.setClickable(true);
+                            }
                         }
-                        ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts, binding, activity);
-                        binding.listview.setAdapter(listAdapter);
-                        binding.listview.setClickable(true);
                         dialog.dismissLoader();
 
                     } else {
@@ -463,11 +489,25 @@ public class FireBaseHelper{
 //                    }
 //                });
 //    }
-    public UserRoles getLoggedInUserRole(Activity activity){
-        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
-        assert email != null;
-        if(email.equalsIgnoreCase("john.smith@gmail.com"))
-            return UserRoles.reviewer;
-        return UserRoles.attendee;
+    public void getLoggedInUserRole(View view, Context context){
+        String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        db.collection("Users")
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if(document.getId().equalsIgnoreCase(currentUserId)){
+                            String role = Objects.requireNonNull(document.getData().get("role")).toString();
+                            SharedPreferences pref = context.getSharedPreferences("currentUserRole", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("role", role);
+                            editor.apply();
+                        }
+                    }
+                } else {
+                    new Utilities().showSnackBar(Objects.requireNonNull(task.getException()).getMessage(), view);
+                }
+            });
     }
 }

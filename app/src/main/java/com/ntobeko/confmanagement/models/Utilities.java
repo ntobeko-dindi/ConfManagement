@@ -1,5 +1,10 @@
 package com.ntobeko.confmanagement.models;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -14,5 +19,16 @@ public class Utilities {
     }
     public static<T> List<T> reverseList(List<T> list) {
         return new ArrayList<>(Lists.reverse(list));
+    }
+
+    public static String getCurrentUserRoleFromSharedPreferences(Context context){
+        SharedPreferences pref = context.getSharedPreferences("currentUserRole", MODE_PRIVATE);
+        return pref.getString("role", "");
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    public static void clearCurrentUserRoleFromSharedPreferences(Context context){
+        SharedPreferences pref = context.getSharedPreferences("currentUserRole", MODE_PRIVATE);
+        pref.edit().clear();
     }
 }
