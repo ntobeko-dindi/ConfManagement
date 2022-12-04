@@ -61,6 +61,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
              Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
             i.putExtra("hiddenConfId",hiddenConfId.getText());
+            i.putExtra("canApprove","1");
             activity.startActivity(i);
         });
 

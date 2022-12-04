@@ -52,13 +52,20 @@ public class PdfViewerActivity extends AppCompatActivity {
         Button rejectButton = findViewById(R.id.btnReject);
 
         Bundle extras = getIntent().getExtras();
+        String canApprove = null;
         String hiddenConfId = null;
         String abstractPdfDownloadUrl = null;
 
         if (extras != null) {
             abstractPdfDownloadUrl = extras.getString("abstractPdfDownloadUrl");
             hiddenConfId = extras.getString("hiddenConfId");
+            canApprove = extras.getString("canApprove");
             new PdfViewerActivity.RetrievePdf().execute(abstractPdfDownloadUrl);
+        }
+
+        if(canApprove.equalsIgnoreCase("0")){
+            approve.setVisibility(View.GONE);
+            rejectButton.setVisibility(View.GONE);
         }
 
         String finalHiddenConfId = hiddenConfId;
