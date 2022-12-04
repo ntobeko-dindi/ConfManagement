@@ -114,7 +114,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         submittedDate.setText(_abstract.getSubmissionDate());
         abstractMsg.setText(_abstract.getAbstractBody());
         authors.setText(_abstract.getCoAuthors());
-        hiddenConfId.setText(_abstract.getConferenceId());
+        hiddenConfId.setText(_abstract.getAbstractId());
         abstractPdfDownloadUrl.setText(_abstract.getAbstractPdfDownloadUrl());
 
         if(_abstract.getAbstractPdfDownloadUrl().equalsIgnoreCase("")){
