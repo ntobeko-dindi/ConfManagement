@@ -52,14 +52,10 @@ public class AuthActivity extends AppCompatActivity {
         if(currentUserRole.equalsIgnoreCase(UserRoles.attendee.name())){
             MenuItem createConf = menu.findItem(R.id.nav_addconf);
             MenuItem approve = menu.findItem(R.id.nav_home);
-            //MenuItem approved = menu.findItem(R.id.nav_approved);
-            //MenuItem rejected = menu.findItem(R.id.nav_rejected);
             MenuItem postNews = menu.findItem(R.id.nav_slideshow);
 
             createConf.setVisible(false);
-            //approved.setVisible(false);
-            //rejected.setVisible(false);
-            approve.setVisible(false);
+            approve.setTitle("Pending Registrations");
             postNews.setVisible(false);
         }else{
             MenuItem register = menu.findItem(R.id.nav_gallery);

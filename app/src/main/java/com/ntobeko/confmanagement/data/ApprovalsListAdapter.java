@@ -16,12 +16,14 @@ import androidx.annotation.Nullable;
 import com.github.barteksc.pdfviewer.PDFView;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
+import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.PdfViewerActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.LocalDate;
+import com.ntobeko.confmanagement.models.Utilities;
 
 import java.util.ArrayList;
 
@@ -45,6 +47,8 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.approvals_list_view,parent,false);
         }
 
+        String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getContext());
+
         TextView theme = convertView.findViewById(R.id.theme);
         TextView status = convertView.findViewById(R.id.status);
         TextView topic = convertView.findViewById(R.id.topic);
@@ -57,11 +61,20 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         Button pdf = convertView.findViewById(R.id.openAbstractPdf);
         TextView abstractPdfDownloadUrl = convertView.findViewById(R.id.hiddenAbstractPdfDownloadUrl);
 
+        String canApprove = "1";
+
+        if(currentUserRole.equalsIgnoreCase(UserRoles.attendee.name())){
+            approve.setVisibility(View.GONE);
+            rejectButton.setVisibility(View.GONE);
+            canApprove = "0";
+        }
+
+        String finalCanApprove = canApprove;
         pdf.setOnClickListener(v -> {
              Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
             i.putExtra("hiddenConfId",hiddenConfId.getText());
-            i.putExtra("canApprove","1");
+            i.putExtra("canApprove", finalCanApprove);
             activity.startActivity(i);
         });
 
