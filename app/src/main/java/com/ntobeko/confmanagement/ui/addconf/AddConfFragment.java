@@ -45,7 +45,7 @@ public class AddConfFragment extends Fragment {
         });
 
         binding.conferenceDate.setOnClickListener(v -> {
-            @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (view, year, month, dayOfMonth) -> binding.conferenceDate.setText(year + "/" + month + "/" + dayOfMonth), 1900 + new Date().getYear(),new Date().getMonth(),new Date().getDate());
+            @SuppressLint("SetTextI18n") DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), (view, year, month, dayOfMonth) -> binding.conferenceDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth), 1900 + new Date().getYear(),new Date().getMonth(),new Date().getDate());
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             datePickerDialog.show();
 
