@@ -391,7 +391,7 @@ public class FireBaseHelper{
                 });
     }
 
-    public void getAbstractsPendingApprovals(View view, Context context, Object binding, Activity activity, ProposalStatus proposalStatus){
+    public void getAbstractsPendingApprovals(View view, Context context, Object binding, Activity activity, ProposalStatus proposalStatus, boolean isAttendee){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
         db.collection("AbstractRegistrations")
@@ -417,6 +417,14 @@ public class FireBaseHelper{
                                 abstracts.add(_abstract);
                             }
                         }
+                        if(isAttendee){
+                            for (int i = 0; i < abstracts.size(); i++) {
+                                if(!abstracts.get(i).getUserId().equalsIgnoreCase(mAuth.getCurrentUser().getUid())){
+                                    abstracts.remove(i);
+                                }
+                            }
+                        }
+
                         if(abstracts.isEmpty()){
                             new Utilities().showSnackBar("There are no abstracts to show", view);
                         }else{
@@ -452,7 +460,7 @@ public class FireBaseHelper{
                 .set(conferenceAbstract)
                 .addOnSuccessListener(aVoid -> {
                     db.collection("AbstractRegistrations").document(conferenceAbstract.getAbstractId()).update("status", conferenceAbstract.getDecisionStatus())
-                            .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view); this.getAbstractsPendingApprovals(view,context,binding,activity,ProposalStatus.Submitted);})
+                            .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view); this.getAbstractsPendingApprovals(view,context,binding,activity,ProposalStatus.Submitted,false);})
                             .addOnFailureListener(b -> new Utilities().showSnackBar(failureMsg, view));
                     new Utilities().showSnackBar(successMsg, view);
                 });
