@@ -51,6 +51,7 @@ public class RejectedListAdapter extends ArrayAdapter<AbstractModel> {
         pdf.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
+            i.putExtra("hiddenConfId",hiddenId.getText());
             activity.startActivity(i);
         });
 

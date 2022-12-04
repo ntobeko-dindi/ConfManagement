@@ -458,6 +458,17 @@ public class FireBaseHelper{
                 });
     }
 
+    public void approvePdfAbstract(AbstractApproval conferenceAbstract, View view, String successMsg, String failureMsg, Context context, Activity activity){
+        db.collection("ConferenceApprovals").document(Objects.requireNonNull(mAuth.getUid()))
+            .set(conferenceAbstract)
+            .addOnSuccessListener(aVoid -> {
+                db.collection("AbstractRegistrations").document(conferenceAbstract.getAbstractId()).update("status", conferenceAbstract.getDecisionStatus())
+                        .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view);})
+                        .addOnFailureListener(b -> new Utilities().showSnackBar(failureMsg, view));
+                new Utilities().showSnackBar(successMsg, view);
+            });
+    }
+
     public void approveConferenceAttendance(ConferenceAttendanceApproval confAttendanceApproval, View view, String successMsg, String failureMsg){
         db.collection("ConferenceAttendanceApprovals").document(Objects.requireNonNull(mAuth.getUid()))
                 .set(confAttendanceApproval)

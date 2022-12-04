@@ -7,12 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.barteksc.pdfviewer.PDFView;
 import com.google.android.material.button.MaterialButton;
+import com.ntobeko.confmanagement.Enums.ProposalStatus;
+import com.ntobeko.confmanagement.data.FireBaseHelper;
+import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.LoadingDialog;
+import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.Utilities;
 
 import java.io.BufferedInputStream;
@@ -46,14 +51,35 @@ public class PdfViewerActivity extends AppCompatActivity {
         Button approve = findViewById(R.id.btnApprove);
         Button rejectButton = findViewById(R.id.btnReject);
 
+        Bundle extras = getIntent().getExtras();
+        String hiddenConfId = null;
+        String abstractPdfDownloadUrl = null;
+
+        if (extras != null) {
+            abstractPdfDownloadUrl = extras.getString("abstractPdfDownloadUrl");
+            hiddenConfId = extras.getString("hiddenConfId");
+            new PdfViewerActivity.RetrievePdf().execute(abstractPdfDownloadUrl);
+        }
+
+        String finalHiddenConfId = hiddenConfId;
         approve.setOnClickListener(v -> {
-            //approve
-            new Utilities().showSnackBar("Approving", viewGroup.getRootView());
+            AbstractApproval approveAbstract = new AbstractApproval(finalHiddenConfId, ProposalStatus.Approved.name(), new LocalDate().getLocalDateTime());
+            String successMsg;
+            String failureMsg;
+
+            successMsg = "Conference attendance approved";
+            failureMsg = "Error occurred while approving conference attendance";
+            new FireBaseHelper().approvePdfAbstract(approveAbstract, viewGroup.getRootView(), successMsg, failureMsg,viewGroup.getContext(),this);
         });
 
         rejectButton.setOnClickListener(v -> {
-            //reject
-            new Utilities().showSnackBar("Rejecting", viewGroup.getRootView());
+            AbstractApproval approveAbstract = new AbstractApproval(finalHiddenConfId, ProposalStatus.Rejected.name(), new LocalDate().getLocalDateTime());
+            String successMsg;
+            String failureMsg;
+
+            successMsg = "Conference attendance rejected";
+            failureMsg = "Error occurred while rejecting conference attendance";
+            new FireBaseHelper().approvePdfAbstract(approveAbstract, viewGroup.getRootView(), successMsg, failureMsg,viewGroup.getContext(),this);
         });
 
         back.setOnClickListener(v -> {
@@ -61,10 +87,8 @@ public class PdfViewerActivity extends AppCompatActivity {
             finish();
         });
 
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
+        if (abstractPdfDownloadUrl != null) {
             dialog.showLoader();
-            String abstractPdfDownloadUrl = extras.getString("abstractPdfDownloadUrl");
             new PdfViewerActivity.RetrievePdf().execute(abstractPdfDownloadUrl);
         }
 

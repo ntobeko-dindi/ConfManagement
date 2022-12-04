@@ -60,6 +60,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         pdf.setOnClickListener(v -> {
              Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
+            i.putExtra("hiddenConfId",hiddenConfId.getText());
             activity.startActivity(i);
         });
 
