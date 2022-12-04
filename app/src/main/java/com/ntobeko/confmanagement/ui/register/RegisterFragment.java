@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +14,23 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
+import com.ntobeko.confmanagement.data.FireBaseStorageHelper;
 import com.ntobeko.confmanagement.databinding.FragmentRegisterBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.ConferenceAttendance;
+import com.ntobeko.confmanagement.models.LoadingDialog;
 import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.Utilities;
@@ -35,6 +41,7 @@ public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
     private final int CHOOSE_PDF_FROM_DEVICE = 1001;
+    private StorageReference mStorageRef;
 
     String selectedRegType = "";
     Boolean isAbstractSubmission = false;
@@ -57,11 +64,11 @@ public class RegisterFragment extends Fragment {
                             "Ain't No Stopping Us Now.",
                             "Living The Sales Life."};
 
-        String[] coAuthors = {"Dr B. Mutanga", "Mr P. Dlamini"};
-
         ArrayAdapter<String> themeAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, themes);
         new FireBaseHelper().populateConferenceDropdown(root, getContext(),binding,getActivity());
         new FireBaseHelper().populateCoAuthorsDropdown(root, getContext(),binding, getActivity());
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         themeAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
@@ -153,9 +160,7 @@ public class RegisterFragment extends Fragment {
                 new FireBaseHelper().submitConferenceAbstract(model, root,getActivity());
             }
         });
-
         binding.chooseFile.setOnClickListener(v -> chooseFileFromDevice());
-
         return root;
     }
 
@@ -169,9 +174,12 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        String storageRefPath = "Abstracts/" + "ConferenceId" + "/" + "UserId" + "/" + "abstract";
+
         if(requestCode == CHOOSE_PDF_FROM_DEVICE && resultCode == RESULT_OK){
             assert data != null;
-            new Utilities().showSnackBar("Path is :=> " + data.getData(),getView()); //
+            new FireBaseStorageHelper().uploadImage(data.getData(),getActivity(),storageRefPath);
         }
     }
 

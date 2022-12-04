@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
+import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.MainActivity;
 import com.ntobeko.confmanagement.R;
