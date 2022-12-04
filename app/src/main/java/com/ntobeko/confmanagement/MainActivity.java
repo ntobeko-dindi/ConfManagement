@@ -2,6 +2,8 @@ package com.ntobeko.confmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -44,4 +46,5 @@ public class MainActivity extends AppCompatActivity {
         }
         new Utilities().showSnackBar("User Logged Out", binding.navView);
     }
+
 }

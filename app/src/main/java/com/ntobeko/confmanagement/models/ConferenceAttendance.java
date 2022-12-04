@@ -3,10 +3,15 @@ package com.ntobeko.confmanagement.models;
 import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 
 public class ConferenceAttendance {
-    String id, userId, lastName, firstName, registeredDate, isCoAuthor;
+    String id, userId, lastName, firstName, registeredDate;
+    Boolean isCoAuthor;
     ConferenceAttendanceStatus status;
 
-    public ConferenceAttendance(String userId, String lastName, String firstName, ConferenceAttendanceStatus status, String registeredDate, String isCoAuthor) {
+    public ConferenceAttendance() {
+
+    }
+
+    public ConferenceAttendance(String userId, String lastName, String firstName, ConferenceAttendanceStatus status, String registeredDate, Boolean isCoAuthor) {
         this.userId = userId;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -44,11 +49,11 @@ public class ConferenceAttendance {
         this.registeredDate = registeredDate;
     }
 
-    public String getIsCoAuthor() {
+    public Boolean getIsCoAuthor() {
         return isCoAuthor;
     }
 
-    public void setIsCoAuthor(String isCoAuthor) {
+    public void setIsCoAuthor(Boolean isCoAuthor) {
         this.isCoAuthor = isCoAuthor;
     }
 

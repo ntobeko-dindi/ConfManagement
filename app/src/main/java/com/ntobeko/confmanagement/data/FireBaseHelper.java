@@ -31,6 +31,7 @@ import com.ntobeko.confmanagement.models.ConferenceAttendanceApproval;
 import com.ntobeko.confmanagement.models.LoadingDialog;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
+import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.User;
 import com.ntobeko.confmanagement.models.Utilities;
 
@@ -311,6 +312,19 @@ public class FireBaseHelper{
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
+    }
+
+    public void submitConferenceAttendance(SubmitConferenceAttendance confAttendance, View view, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
+
+        confAttendance.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+        confAttendance.setStatus(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted);
+
+        db.collection("ConferenceAttendances").document()
+                .set(confAttendance)
+                .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Conference attendance registration submitted", view);dialog.dismissLoader();})
+                .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while submitting conference attendance registration", view);dialog.dismissLoader();});
     }
 
     public void populateCoAuthorsDropdown(View view, Context context, FragmentRegisterBinding binding, Activity activity){

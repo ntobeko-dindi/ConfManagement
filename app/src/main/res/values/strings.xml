@@ -43,6 +43,8 @@
     <string name="menu_approval">Approvals</string>
     <string name="type_research_abstract_here">Type Research Abstract here</string>
     <string name="select_associated_conference">Select associated conference</string>
+    <string name="select_role">Select appropriate role</string>
+    <string name="select_registration_type">Select registration type</string>
     <string name="reject">Reject</string>
     <string name="approve">Approve</string>
     <string name="status">Status</string>
@@ -64,4 +66,11 @@
     <string name="approved_abstracts">Approved Abstracts</string>
     <string name="rejected_abstracts">Rejected Abstracts</string>
     <string name="history">History</string>
+    <string name="are_you_a_author">Are you an Author?</string>
+    <string name="attendee">Attendee</string>
+    <string name="author">Author</string>
+    <string name="is_abstract_no">No</string>
+    <string name="is_abstract_yes">Yes</string>
+    <string name="are_you_submitting_an_abstract">Are you submitting an abstract?</string>
+    <string name="coauthor">CoAuthor</string>
 </resources>
