@@ -61,9 +61,14 @@ public class PdfViewerActivity extends AppCompatActivity {
             finish();
         });
 
-        dialog.showLoader();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            dialog.showLoader();
+            String abstractPdfDownloadUrl = extras.getString("abstractPdfDownloadUrl");
+            new PdfViewerActivity.RetrievePdf().execute(abstractPdfDownloadUrl);
+        }
 
-        new PdfViewerActivity.RetrievePdf().execute("https://www.africau.edu/images/default/sample.pdf");
+
     }
     class RetrievePdf extends AsyncTask<String, Void, InputStream>{
 

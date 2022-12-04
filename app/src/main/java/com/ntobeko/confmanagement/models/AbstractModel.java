@@ -3,7 +3,7 @@ package com.ntobeko.confmanagement.models;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 
 public class AbstractModel {
-    private String id, userId, researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors;
+    private String id, userId, researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors, abstractPdfDownloadUrl;
     private ProposalStatus status;
 
     public AbstractModel() {
@@ -27,6 +27,13 @@ public class AbstractModel {
         this.status = status;
     }
 
+    public String getAbstractPdfDownloadUrl() {
+        return abstractPdfDownloadUrl;
+    }
+
+    public void setAbstractPdfDownloadUrl(String abstractPdfDownloadUrl) {
+        this.abstractPdfDownloadUrl = abstractPdfDownloadUrl;
+    }
 
     public String getResearchTopic() {
         return researchTopic;

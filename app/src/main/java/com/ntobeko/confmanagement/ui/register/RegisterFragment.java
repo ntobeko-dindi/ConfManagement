@@ -153,10 +153,7 @@ public class RegisterFragment extends Fragment {
                     new Utilities().showSnackBar("Please select theme", root);
                     return;
                 }
-                if(title.equals("") || body.equals("")){
-                    new Utilities().showSnackBar("Both research topic and abstract are required", root);
-                    return;
-                }
+
                 AbstractModel model = new AbstractModel();
                 model.setResearchTopic(title);
                 model.setAbstractBody(body);
@@ -165,6 +162,11 @@ public class RegisterFragment extends Fragment {
                 model.setSubmissionDate(new LocalDate().getLocalDateTime());
                 model.setCoAuthors(_coAuthors);
                 model.setTheme(theme);
+                model.setAbstractPdfDownloadUrl(binding.hiddenConfIds.getText().toString());
+
+                if(!binding.hiddenConfIds.getText().toString().substring(0,5).equalsIgnoreCase("https")){
+                    model.setAbstractPdfDownloadUrl("");
+                }
 
                 new FireBaseHelper().submitConferenceAbstract(model, root,getActivity());
             }

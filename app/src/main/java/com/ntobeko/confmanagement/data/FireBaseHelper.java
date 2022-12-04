@@ -208,6 +208,7 @@ public class FireBaseHelper{
         _abstract.put("submissionDate", abstractModel.getSubmissionDate());
         _abstract.put("coAuthors", abstractModel.getCoAuthors());
         _abstract.put("status", abstractModel.getStatus().name());
+        _abstract.put("abstractPdfDownloadUrl", abstractModel.getAbstractPdfDownloadUrl());
 
         db.collection("AbstractRegistrations").document()
                 .set(_abstract)
@@ -407,6 +408,7 @@ public class FireBaseHelper{
                                     ProposalStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString())
                             );
                             _abstract.setAbstractId(document.getId());
+                            _abstract.setAbstractPdfDownloadUrl((String) document.getData().get("abstractPdfDownloadUrl"));
                             _abstract.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
 
                             if(_abstract.getStatus().name().equalsIgnoreCase(proposalStatus.name())){
@@ -424,13 +426,13 @@ public class FireBaseHelper{
                             }else
                                 if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Rejected.name())){
                                 FragmentRejectedBinding bind = (FragmentRejectedBinding) binding;
-                                ListAdapter listAdapter = new RejectedListAdapter(context,abstracts);
+                                ListAdapter listAdapter = new RejectedListAdapter(context,abstracts,activity);
                                 ((FragmentRejectedBinding) binding).listview.setAdapter(listAdapter);
                                 ((FragmentRejectedBinding) binding).listview.setClickable(true);
                             }else
                                 if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Approved.name())){
                                 FragmentApprovedBinding bind = (FragmentApprovedBinding) binding;
-                                ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts);
+                                ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts,activity);
                                 ((FragmentApprovedBinding) binding).listview.setAdapter(listAdapter);
                                 ((FragmentApprovedBinding) binding).listview.setClickable(true);
                             }

@@ -1,6 +1,8 @@
 package com.ntobeko.confmanagement.data;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +13,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.ntobeko.confmanagement.PdfViewerActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.models.AbstractModel;
 
 import java.util.ArrayList;
 
 public class RejectedListAdapter extends ArrayAdapter<AbstractModel> {
-
-    public RejectedListAdapter(Context context, ArrayList<AbstractModel> list){
+    private final Activity activity;
+    public RejectedListAdapter(Context context, ArrayList<AbstractModel> list, Activity activity){
         super(context, R.layout.approvals_list_view,list);
+        this.activity = activity;
     }
 
     @NonNull
@@ -41,6 +45,14 @@ public class RejectedListAdapter extends ArrayAdapter<AbstractModel> {
         TextView hiddenId = convertView.findViewById(R.id.hiddenId);
         Button rejectButton = convertView.findViewById(R.id.btnReject);
         Button approveButton = convertView.findViewById(R.id.btnApprove);
+        Button pdf = convertView.findViewById(R.id.openAbstractPdf);
+        TextView abstractPdfDownloadUrl = convertView.findViewById(R.id.hiddenAbstractPdfDownloadUrl);
+
+        pdf.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), PdfViewerActivity.class);
+            i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
+            activity.startActivity(i);
+        });
 
         theme.setText(_abstract.getTheme());
         status.setText(_abstract.getStatus().toString());
@@ -49,9 +61,14 @@ public class RejectedListAdapter extends ArrayAdapter<AbstractModel> {
         abstractMsg.setText(_abstract.getAbstractBody());
         authors.setText(_abstract.getCoAuthors());
         hiddenId.setText(_abstract.getAbstractId());
+        abstractPdfDownloadUrl.setText(_abstract.getAbstractPdfDownloadUrl());
 
         approveButton.setVisibility(View.GONE);
         rejectButton.setVisibility(View.GONE);
+
+        if(_abstract.getAbstractPdfDownloadUrl().equalsIgnoreCase("")){
+            pdf.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

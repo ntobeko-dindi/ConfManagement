@@ -55,10 +55,12 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         Button approve = convertView.findViewById(R.id.btnApprove);
         Button rejectButton = convertView.findViewById(R.id.btnReject);
         Button pdf = convertView.findViewById(R.id.openAbstractPdf);
+        TextView abstractPdfDownloadUrl = convertView.findViewById(R.id.hiddenAbstractPdfDownloadUrl);
 
         pdf.setOnClickListener(v -> {
-            activity.startActivity(new Intent(getContext(), PdfViewerActivity.class));
-            //activity.finish();
+             Intent i = new Intent(getContext(), PdfViewerActivity.class);
+            i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
+            activity.startActivity(i);
         });
 
         //set the button actions
@@ -113,6 +115,11 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         abstractMsg.setText(_abstract.getAbstractBody());
         authors.setText(_abstract.getCoAuthors());
         hiddenConfId.setText(_abstract.getConferenceId());
+        abstractPdfDownloadUrl.setText(_abstract.getAbstractPdfDownloadUrl());
+
+        if(_abstract.getAbstractPdfDownloadUrl().equalsIgnoreCase("")){
+            pdf.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

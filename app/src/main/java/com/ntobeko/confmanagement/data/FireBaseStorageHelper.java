@@ -6,6 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ntobeko.confmanagement.R;
@@ -28,10 +32,13 @@ public class FireBaseStorageHelper {
                 dialog.dismissLoader();
                 TextView textView = view.findViewById(R.id.abstractBody);
                 Button button = view.findViewById(R.id.chooseFile);
+                TextView url = view.findViewById(R.id.hiddenConfIds);
 
                 textView.setVisibility(View.GONE);
                 button.setVisibility(View.GONE);
-
+                taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnCompleteListener(task -> {
+                    url.setText(task.getResult().toString());
+                });
             })
             .addOnFailureListener(exception -> dialog.dismissLoader())
             .addOnProgressListener(snapshot -> {
