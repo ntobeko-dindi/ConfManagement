@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -270,6 +271,7 @@ public class FireBaseHelper{
                                     "Date : " + Objects.requireNonNull(document.getData().get("date")),
                                     "Posted On : " + Objects.requireNonNull(document.getData().get("createdDate"))
                             );
+                            conference.setConferenceId(document.getId());
                             conferences.add(conference);
                         }
                         if(conferences.isEmpty()){
@@ -303,6 +305,7 @@ public class FireBaseHelper{
                                     "Date : " + Objects.requireNonNull(document.getData().get("date")),
                                     "Posted On : " + Objects.requireNonNull(document.getData().get("createdDate"))
                             );
+                            conference.setConferenceId(document.getId());
                             conferences.add(conference);
                         }
                         if(conferences.isEmpty()){
@@ -310,10 +313,15 @@ public class FireBaseHelper{
                         }
 
                         String[] conf = new String[conferences.size()];
+                        StringBuilder ids = new StringBuilder("");
 
                         for (int i = 0; i < conf.length; i++) {
                             conf[i] = conferences.get(i).getName();
+                            ids.append(conferences.get(i).getConferenceId()).append("|");
                         }
+                        TextView textView = view.findViewById(R.id.hiddenConfIds);
+                        textView.setText(ids.substring(0, ids.toString().length() - 1));
+
                         ArrayAdapter<String> conferenceAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, conf);
                         conferenceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                         binding.spinnerConference.setAdapter(conferenceAdapter);
@@ -428,7 +436,6 @@ public class FireBaseHelper{
                             }
                         }
                         dialog.dismissLoader();
-
                     } else {
                         dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);

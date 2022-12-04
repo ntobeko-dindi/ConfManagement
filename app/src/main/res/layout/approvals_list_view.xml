@@ -81,6 +81,15 @@
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary"
                     />
+
+                <Button
+                    android:id="@+id/openAbstractPdf"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/open_pdf"
+                    android:textSize="12sp"
+                    />
+
                 <TextView
                     android:id="@+id/hiddenId"
                     android:layout_width="0dp"

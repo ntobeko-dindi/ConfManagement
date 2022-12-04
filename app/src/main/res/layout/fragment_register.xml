@@ -130,7 +130,15 @@
                             tools:ignore="LabelFor" />
 
                     </com.google.android.material.textfield.TextInputLayout>
-
+                    <TextView
+                        android:id="@+id/hiddenConfIds"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="0dp"
+                        android:text=""
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary"
+                        />
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layoutTitle"
                         android:hint="@string/research_proposal_title"

@@ -73,4 +73,6 @@
     <string name="is_abstract_yes">Yes</string>
     <string name="are_you_submitting_an_abstract">Are you submitting an abstract?</string>
     <string name="coauthor">CoAuthor</string>
+    <string name="open_pdf">Open Pdf</string>
+    <string name="back">Back</string>
 </resources>

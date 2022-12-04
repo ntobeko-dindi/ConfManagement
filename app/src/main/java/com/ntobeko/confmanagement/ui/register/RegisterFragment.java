@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -42,6 +43,8 @@ public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding binding;
     private final int CHOOSE_PDF_FROM_DEVICE = 1001;
     private StorageReference mStorageRef;
+
+    String selectedConfId ;
 
     String selectedRegType = "";
     Boolean isAbstractSubmission = false;
@@ -122,6 +125,12 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        binding.spinnerConference.setOnItemClickListener((parent, view, position, id) -> {
+            String arr [] = binding.hiddenConfIds.getText().toString().split("\\|");
+            selectedConfId = arr[position];
+            new Utilities().showSnackBar(selectedConfId , root);
+        });
+
         binding.register.setOnClickListener(v -> {
             String conference = binding.spinnerConference.getText().toString();
             String title = Objects.requireNonNull(binding.researchTopic.getText()).toString();
@@ -160,7 +169,13 @@ public class RegisterFragment extends Fragment {
                 new FireBaseHelper().submitConferenceAbstract(model, root,getActivity());
             }
         });
-        binding.chooseFile.setOnClickListener(v -> chooseFileFromDevice());
+        binding.chooseFile.setOnClickListener(v -> {
+            if(binding.spinnerConference.getText().toString().equals("")){
+                new Utilities().showSnackBar("Please Select A Conference", root);
+                return;
+            }
+            chooseFileFromDevice();
+        });
         return root;
     }
 
@@ -175,11 +190,11 @@ public class RegisterFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        String storageRefPath = "Abstracts/" + "ConferenceId" + "/" + "UserId" + "/" + "abstract";
+        String storageRefPath = "Abstracts/" + selectedConfId + "/" + Objects.requireNonNull(new FireBaseHelper().getmAuth().getCurrentUser()).getUid() + "/" + "abstract";
 
         if(requestCode == CHOOSE_PDF_FROM_DEVICE && resultCode == RESULT_OK){
             assert data != null;
-            new FireBaseStorageHelper().uploadImage(data.getData(),getActivity(),storageRefPath);
+            new FireBaseStorageHelper().uploadImage(data.getData(),getActivity(),storageRefPath,getView());
         }
     }
 

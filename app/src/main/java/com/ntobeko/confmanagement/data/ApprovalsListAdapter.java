@@ -2,6 +2,7 @@ package com.ntobeko.confmanagement.data;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.github.barteksc.pdfviewer.PDFView;
+import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
+import com.ntobeko.confmanagement.PdfViewerActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
@@ -47,14 +51,20 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         TextView submittedDate = convertView.findViewById(R.id.submissionDate);
         TextView abstractMsg = convertView.findViewById(R.id.abstractBody);
         TextView authors = convertView.findViewById(R.id.authors);
-        TextView hiddenId = convertView.findViewById(R.id.hiddenId);
+        TextView hiddenConfId = convertView.findViewById(R.id.hiddenId);
         Button approve = convertView.findViewById(R.id.btnApprove);
         Button rejectButton = convertView.findViewById(R.id.btnReject);
+        Button pdf = convertView.findViewById(R.id.openAbstractPdf);
+
+        pdf.setOnClickListener(v -> {
+            activity.startActivity(new Intent(getContext(), PdfViewerActivity.class));
+            //activity.finish();
+        });
 
         //set the button actions
         View finalConvertView = convertView;
         approve.setOnClickListener(v -> {
-            AbstractApproval approveAbstract = new AbstractApproval(hiddenId.getText().toString(), ProposalStatus.Approved.name(), new LocalDate().getLocalDateTime());
+            AbstractApproval approveAbstract = new AbstractApproval(hiddenConfId.getText().toString(), ProposalStatus.Approved.name(), new LocalDate().getLocalDateTime());
             String successMsg;
             String failureMsg;
 
@@ -78,7 +88,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         });
 
         rejectButton.setOnClickListener(v -> {
-            AbstractApproval rejectAbstract = new AbstractApproval(hiddenId.getText().toString(), ProposalStatus.Rejected.toString(), new LocalDate().getLocalDateTime());
+            AbstractApproval rejectAbstract = new AbstractApproval(hiddenConfId.getText().toString(), ProposalStatus.Rejected.toString(), new LocalDate().getLocalDateTime());
 
             String successMsg = "Conference abstract rejected";
             String failureMsg = "Error occurred while rejecting conference abstract";
@@ -102,7 +112,7 @@ public class ApprovalsListAdapter extends ArrayAdapter<AbstractModel> {
         submittedDate.setText(_abstract.getSubmissionDate());
         abstractMsg.setText(_abstract.getAbstractBody());
         authors.setText(_abstract.getCoAuthors());
-        hiddenId.setText(_abstract.getAbstractId());
+        hiddenConfId.setText(_abstract.getConferenceId());
 
         return convertView;
     }
