@@ -13,9 +13,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.PdfViewerActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.models.AbstractModel;
+import com.ntobeko.confmanagement.models.Utilities;
 
 import java.util.ArrayList;
 
@@ -36,6 +38,8 @@ public class ApprovedListAdapter extends ArrayAdapter<AbstractModel> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.approvals_list_view,parent,false);
         }
 
+        String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getContext());
+
         TextView theme = convertView.findViewById(R.id.theme);
         TextView status = convertView.findViewById(R.id.status);
         TextView topic = convertView.findViewById(R.id.topic);
@@ -48,11 +52,27 @@ public class ApprovedListAdapter extends ArrayAdapter<AbstractModel> {
         Button pdf = convertView.findViewById(R.id.openAbstractPdf);
         TextView abstractPdfDownloadUrl = convertView.findViewById(R.id.hiddenAbstractPdfDownloadUrl);
 
+        Button openProofOfPayment = convertView.findViewById(R.id.openProofOfPayment);
+        TextView downloadProofOfPaymentUrl = convertView.findViewById(R.id.downloadProofOfPaymentUrl);
+
+        if(currentUserRole.equalsIgnoreCase(UserRoles.attendee.name())){
+            approveButton.setVisibility(View.GONE);
+            rejectButton.setVisibility(View.GONE);
+        }
+
         pdf.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
             i.putExtra("hiddenConfId",hiddenId.getText());
             i.putExtra("canApprove","0");
+            activity.startActivity(i);
+        });
+
+        openProofOfPayment.setOnClickListener(v -> {
+            Intent i = new Intent(getContext(), PdfViewerActivity.class);
+            i.putExtra("abstractPdfDownloadUrl", downloadProofOfPaymentUrl.getText());
+            i.putExtra("hiddenConfId",hiddenId.getText());
+            i.putExtra("canApprove", "0");
             activity.startActivity(i);
         });
 
@@ -64,6 +84,7 @@ public class ApprovedListAdapter extends ArrayAdapter<AbstractModel> {
         authors.setText(_abstract.getCoAuthors());
         hiddenId.setText(_abstract.getAbstractId());
         abstractPdfDownloadUrl.setText(_abstract.getAbstractPdfDownloadUrl());
+        downloadProofOfPaymentUrl.setText(_abstract.getDownloadProofOfPaymentUrl());
 
         approveButton.setVisibility(View.GONE);
         rejectButton.setVisibility(View.GONE);
