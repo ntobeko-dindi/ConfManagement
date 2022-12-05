@@ -401,11 +401,40 @@ public class FireBaseHelper{
     public void getAbstractsPendingApprovals(View view, Context context, Object binding, Activity activity, ProposalStatus proposalStatus, boolean isAttendee){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
+        ArrayList<AbstractModel> abstracts = new ArrayList<>();
+
+        db.collection("ConferenceAttendances")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        //ArrayList<SubmitConferenceAttendance> abstracts = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            SubmitConferenceAttendance _confAttends = new SubmitConferenceAttendance(
+                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("registrationType")).toString(),
+                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("isAbstractSubmission")).toString())
+                            );
+                            _confAttends.setUserId((String) document.getData().get("userId"));
+                            _confAttends.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
+
+                            if(_confAttends.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted.name())){
+                                AbstractModel model = new AbstractModel();
+                                model.setConferenceAttendance(_confAttends);
+                                abstracts.add(model);
+                            }
+                        }
+                    } else {
+                        dialog.dismissLoader();
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
+
+
         db.collection("AbstractRegistrations")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        ArrayList<AbstractModel> abstracts = new ArrayList<>();
+                        //ArrayList<AbstractModel> abstracts = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             AbstractModel _abstract = new AbstractModel(
                                     Objects.requireNonNull(document.getData().get("researchTopic")).toString(),
@@ -442,13 +471,13 @@ public class FireBaseHelper{
                                 ((FragmentApprovalsBinding) binding).listview.setAdapter(listAdapter);
                                 ((FragmentApprovalsBinding) binding).listview.setClickable(true);
                             }else
-                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Rejected.name())){
+                            if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Rejected.name())){
                                 FragmentRejectedBinding bind = (FragmentRejectedBinding) binding;
                                 ListAdapter listAdapter = new RejectedListAdapter(context,abstracts,activity);
                                 ((FragmentRejectedBinding) binding).listview.setAdapter(listAdapter);
                                 ((FragmentRejectedBinding) binding).listview.setClickable(true);
                             }else
-                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Approved.name())){
+                            if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Approved.name())){
                                 FragmentApprovedBinding bind = (FragmentApprovedBinding) binding;
                                 ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts,activity);
                                 ((FragmentApprovedBinding) binding).listview.setAdapter(listAdapter);
@@ -461,6 +490,7 @@ public class FireBaseHelper{
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
                     }
                 });
+
     }
 
     public void approveAbstract(AbstractApproval conferenceAbstract, View view, String successMsg, String failureMsg, Context context, FragmentApprovalsBinding binding, Activity activity){

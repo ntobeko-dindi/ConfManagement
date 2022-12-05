@@ -5,8 +5,17 @@ import com.ntobeko.confmanagement.Enums.ProposalStatus;
 public class AbstractModel {
     private String id, userId, researchTopic, abstractBody, theme, conferenceId, submissionDate, coAuthors, abstractPdfDownloadUrl, downloadProofOfPaymentUrl;
     private ProposalStatus status;
+    private SubmitConferenceAttendance conferenceAttendance;
 
     public AbstractModel() {
+    }
+
+    public SubmitConferenceAttendance getConferenceAttendance() {
+        return conferenceAttendance;
+    }
+
+    public void setConferenceAttendance(SubmitConferenceAttendance conferenceAttendance) {
+        this.conferenceAttendance = conferenceAttendance;
     }
 
     public String getUserId() {
