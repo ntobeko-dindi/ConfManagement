@@ -21,6 +21,7 @@ import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAttapprovalsBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
+import com.ntobeko.confmanagement.models.ConferenceAttendance;
 import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.Utilities;
@@ -44,7 +45,7 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
         SubmitConferenceAttendance _confAttendance = getItem(position);
 
         if (convertView == null){
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.approvals_list_view,parent,false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.att_approvals_list_view,parent,false);
         }
 
         String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getContext());
@@ -101,13 +102,13 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
         //set the button actions
         View finalConvertView = convertView;
         approve.setOnClickListener(v -> {
-//            AbstractApproval approveAbstract = new AbstractApproval(hiddenConfId.getText().toString(), ProposalStatus.Approved.name(), new LocalDate().getLocalDateTime());
+//            ConferenceAttendance approveAbstract = new AbstractApproval(hiddenConfId.getText().toString(), ProposalStatus.Approved.name(), new LocalDate().getLocalDateTime());
 //            String successMsg;
 //            String failureMsg;
 //
 //            successMsg = "Conference attendance approved";
 //            failureMsg = "Error occurred while approving conference attendance";
-//            new FireBaseHelper().approveAbstract(approveAbstract, finalConvertView, successMsg, failureMsg,getContext(), fragmentApprovalsBinding,activity);
+//            new FireBaseHelper().approveConferenceAttendance(approveAbstract, finalConvertView, successMsg, failureMsg,getContext(), fragmentApprovalsBinding,activity);
 
         });
 
@@ -124,6 +125,8 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
         attendType.setText(_confAttendance.getRegistrationType());
         regDate.setText(_confAttendance.getRegistrationDate());
         attendStatus.setText(_confAttendance.getStatus().name());
+        hiddenAttId.setText(_confAttendance.getConferenceId());
+        downloadProofOfPaymentUrl.setText(_confAttendance.getDownloadProofOfPaymentUrl());
 
 //        theme.setText("");
 //        status.setText(_abstract.getStatus().toString());

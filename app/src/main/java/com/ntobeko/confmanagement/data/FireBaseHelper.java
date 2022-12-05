@@ -564,7 +564,7 @@ public class FireBaseHelper{
                             SubmitConferenceAttendance _pendingAttendeeApproval = new SubmitConferenceAttendance(
                                     Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
                                     Objects.requireNonNull(document.getData().get("registrationDate")).toString(),
-                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("isAbstractSubmission")).toString())
+                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("abstractSubmission")).toString())
                             );
                             _pendingAttendeeApproval.setAttendanceId(document.getId());
                             _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
