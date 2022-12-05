@@ -32,7 +32,7 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
     private final FragmentAttapprovalsBinding fragmentApprovalsBinding;
     private final Activity activity;
     public AttApprovalsListAdapter(Context context, ArrayList<SubmitConferenceAttendance> list, FragmentAttapprovalsBinding fragmentAttapprovalsBinding, Activity activity){
-        super(context, R.layout.approvals_list_view,list);
+        super(context, R.layout.att_approvals_list_view,list);
         this.fragmentApprovalsBinding = fragmentAttapprovalsBinding;
         this.activity = activity;
     }
@@ -41,7 +41,7 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-        SubmitConferenceAttendance _abstract = getItem(position);
+        SubmitConferenceAttendance _confAttendance = getItem(position);
 
         if (convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.approvals_list_view,parent,false);
@@ -49,17 +49,25 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
 
         String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getContext());
 
-        TextView theme = convertView.findViewById(R.id.theme);
-        TextView status = convertView.findViewById(R.id.status);
-        TextView topic = convertView.findViewById(R.id.topic);
-        TextView submittedDate = convertView.findViewById(R.id.submissionDate);
-        TextView abstractMsg = convertView.findViewById(R.id.abstractBody);
-        TextView authors = convertView.findViewById(R.id.authors);
-        TextView hiddenConfId = convertView.findViewById(R.id.hiddenId);
+        TextView confName = convertView.findViewById(R.id.conferenceName);
+        TextView attendType = convertView.findViewById(R.id.attendanceType);
+        TextView regDate = convertView.findViewById(R.id.registrationDate);
+        TextView attendStatus = convertView.findViewById(R.id.status);
+        TextView hiddenAttId = convertView.findViewById(R.id.hiddenAttId);
+
+//        TextView theme = convertView.findViewById(R.id.theme);
+//        TextView status = convertView.findViewById(R.id.status);
+//        TextView topic = convertView.findViewById(R.id.topic);
+//        TextView submittedDate = convertView.findViewById(R.id.submissionDate);
+//        TextView abstractMsg = convertView.findViewById(R.id.abstractBody);
+//        TextView authors = convertView.findViewById(R.id.authors);
+//        TextView hiddenConfId = convertView.findViewById(R.id.hiddenId);
+
         Button approve = convertView.findViewById(R.id.btnApprove);
         Button rejectButton = convertView.findViewById(R.id.btnReject);
-        Button pdf = convertView.findViewById(R.id.openAbstractPdf);
-        TextView abstractPdfDownloadUrl = convertView.findViewById(R.id.hiddenAbstractPdfDownloadUrl);
+
+//        Button pdf = convertView.findViewById(R.id.openAbstractPdf);
+//        TextView abstractPdfDownloadUrl = convertView.findViewById(R.id.hiddenAbstractPdfDownloadUrl);
 
         Button openProofOfPayment = convertView.findViewById(R.id.openProofOfPayment);
         TextView downloadProofOfPaymentUrl = convertView.findViewById(R.id.downloadProofOfPaymentUrl);
@@ -73,19 +81,19 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
         }
 
         String finalCanApprove = canApprove;
-        pdf.setOnClickListener(v -> {
-             Intent i = new Intent(getContext(), PdfViewerActivity.class);
-            i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
-            i.putExtra("hiddenConfId",hiddenConfId.getText());
-            i.putExtra("canApprove", finalCanApprove);
-            activity.startActivity(i);
-        });
+//        pdf.setOnClickListener(v -> {
+//             Intent i = new Intent(getContext(), PdfViewerActivity.class);
+//            i.putExtra("abstractPdfDownloadUrl",abstractPdfDownloadUrl.getText());
+//            i.putExtra("hiddenConfId",hiddenConfId.getText());
+//            i.putExtra("canApprove", finalCanApprove);
+//            activity.startActivity(i);
+//        });
 
 
         openProofOfPayment.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl", downloadProofOfPaymentUrl.getText());
-            i.putExtra("hiddenConfId",hiddenConfId.getText());
+            i.putExtra("hiddenConfId",hiddenAttId.getText());
             i.putExtra("canApprove", finalCanApprove);
             activity.startActivity(i);
         });
@@ -112,15 +120,20 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
 
         });
 
-        theme.setText("");
-        status.setText(_abstract.getStatus().toString());
-        topic.setText(_abstract.getAttendanceId());
-        submittedDate.setText(_abstract.getRegistrationDate());
-        abstractMsg.setText("");
-        authors.setText(_abstract.getRegistrationType());
-        hiddenConfId.setText(_abstract.getConferenceId());
-        abstractPdfDownloadUrl.setText("");
-        downloadProofOfPaymentUrl.setText(_abstract.getDownloadProofOfPaymentUrl());
+        confName.setText(_confAttendance.getConferenceId());
+        attendType.setText(_confAttendance.getRegistrationType());
+        regDate.setText(_confAttendance.getRegistrationDate());
+        attendStatus.setText(_confAttendance.getStatus().name());
+
+//        theme.setText("");
+//        status.setText(_abstract.getStatus().toString());
+//        //topic.setText(_abstract.getAttendanceId());
+//        submittedDate.setText(_abstract.getRegistrationDate());
+//        abstractMsg.setText("");
+//        topic.setText(_abstract.getRegistrationType());
+//        hiddenConfId.setText(_abstract.getConferenceId());
+//        abstractPdfDownloadUrl.setText("");
+//        downloadProofOfPaymentUrl.setText(_abstract.getDownloadProofOfPaymentUrl());
 
         return convertView;
     }

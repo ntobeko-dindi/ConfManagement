@@ -36,13 +36,13 @@ import com.ntobeko.confmanagement.models.Conference;
 import com.ntobeko.confmanagement.models.ConferenceAttendance;
 import com.ntobeko.confmanagement.models.ConferenceAttendanceApproval;
 import com.ntobeko.confmanagement.models.LoadingDialog;
+import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
 import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.User;
 import com.ntobeko.confmanagement.models.Utilities;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -347,6 +347,7 @@ public class FireBaseHelper{
         dialog.showLoader();
 
         confAttendance.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+        confAttendance.setRegistrationDate(new LocalDate().getLocalDateTime());
         confAttendance.setStatus(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted);
 
         db.collection("ConferenceAttendances").document()
@@ -497,22 +498,23 @@ public class FireBaseHelper{
                 });
     }
 
-    //    public void getConferenceAttendeePendingApprovals(View view, Context context, FragmentApprovalsBinding binding){
+//    public void getConferenceAttendeePendingApprovals(View view, Context context, FragmentApprovalsBinding binding){
 //        db.collection("ConferenceAttendances")
 //                .get()
 //                .addOnCompleteListener(task -> {
 //                    if (task.isSuccessful()) {
-//                        ArrayList<ConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
+//                        ArrayList<SubmitConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
 //                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            ConferenceAttendance _pendingAttendeeApproval = new ConferenceAttendance(
-//                                    Objects.requireNonNull(document.getData().get("userId")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("firstName")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("lastName")).toString(),
-//                                    ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()),
+//                            SubmitConferenceAttendance _pendingAttendeeApproval = new SubmitConferenceAttendance(
+//                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
 //                                    Objects.requireNonNull(document.getData().get("registeredDate")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("isCoAuthor")).toString()
+//                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("isAbstractSubmission")).toString())
 //                            );
 //                            _pendingAttendeeApproval.setAttendanceId(document.getId());
+//                            _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
+//                            _pendingAttendeeApproval.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
+//                            _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("registrationType")).toString());
+//
 //                            if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted.name())){
 //                                attendanceApprovalsPending.add(_pendingAttendeeApproval);
 //                            }
@@ -529,6 +531,7 @@ public class FireBaseHelper{
 //                    }
 //                });
 //    }
+
     public void getLoggedInUserRole(View view, Context context){
         String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
