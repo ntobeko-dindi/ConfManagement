@@ -35,13 +35,14 @@ public class FireBaseStorageHelper {
                 TextView url = view.findViewById(R.id.hiddenConfIds);
                 TextView url2 = view.findViewById(R.id.downloadProofOfPaymentUrl);
 
-                textView.setVisibility(View.GONE);
-                button.setVisibility(View.GONE);
+
                 taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnCompleteListener(task -> {
                    if(docName.equalsIgnoreCase("payment")){
                        url2.setText(task.getResult().toString());
                    }else{
                        url.setText(task.getResult().toString());
+                       textView.setVisibility(View.GONE);
+                       button.setVisibility(View.GONE);
                    }
                 });
             })
