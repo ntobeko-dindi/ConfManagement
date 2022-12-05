@@ -24,6 +24,7 @@ import com.ntobeko.confmanagement.MainActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
+import com.ntobeko.confmanagement.databinding.FragmentAttapprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
@@ -549,4 +550,38 @@ public class FireBaseHelper{
                 }
             });
     }
+
+        public void getConferenceAttendeePendingApprovals(View view, Context context, FragmentAttapprovalsBinding binding, Activity activity){
+        db.collection("ConferenceAttendances")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<SubmitConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            SubmitConferenceAttendance _pendingAttendeeApproval = new SubmitConferenceAttendance(
+                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("registeredDate")).toString(),
+                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("isAbstractSubmission")).toString())
+                            );
+                            _pendingAttendeeApproval.setAttendanceId(document.getId());
+                            _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
+                            _pendingAttendeeApproval.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
+                            _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("registrationType")).toString());
+
+                            if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted.name())){
+                                attendanceApprovalsPending.add(_pendingAttendeeApproval);
+                            }
+                        }
+                        if(attendanceApprovalsPending.isEmpty()){
+                            new Utilities().showSnackBar("There are no conference attendance approvals to show", view);
+                        }
+                        ListAdapter listAdapter = new AttApprovalsListAdapter(context, attendanceApprovalsPending,binding, activity);
+                        binding.listview.setAdapter(listAdapter);
+                        binding.listview.setClickable(true);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+           });
+}
 }
