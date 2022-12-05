@@ -131,6 +131,45 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <Button
+                        android:id="@+id/uploadProofOfPayment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="62dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="62dp"
+                        android:text="@string/upload_proof_of_payment"
+                        android:elevation="0dp"
+                        android:gravity="center"
+                        android:drawableStart="@drawable/ic_baseline_attach_file_24"
+                        android:textAllCaps="false"
+                        android:textColor="@color/textColor"
+                        android:textSize="14sp"
+                        app:backgroundTint="@color/grey"
+                        app:shapeAppearanceOverlay="@style/Button5"/>
+
+                    <TextView
+                        android:id="@+id/hiddenConfIds"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="0dp"
+                        android:text=""
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/downloadProofOfPaymentUrl"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="0dp"
+                        android:text=""
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        android:textColor="?android:attr/textColorSecondary"
+                        />
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/layoutTitle"
                         android:hint="@string/research_proposal_title"

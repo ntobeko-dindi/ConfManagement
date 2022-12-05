@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
+import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
-import com.ntobeko.confmanagement.models.ConferenceAttendance;
+import com.ntobeko.confmanagement.models.Utilities;
 
 public class ApprovalsFragment extends Fragment {
 
@@ -23,8 +23,10 @@ public class ApprovalsFragment extends Fragment {
 
         binding = FragmentApprovalsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        new FireBaseHelper().getAbstractsPendingApprovals(root,getContext(),binding, getActivity(), ProposalStatus.Submitted);
-        //new FireBaseHelper().getConferenceAttendeePendingApprovals(root,getContext(),binding);
+
+        String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getContext());
+
+        new FireBaseHelper().getAbstractsPendingApprovals(root,getContext(),binding, getActivity(), ProposalStatus.Submitted,currentUserRole.equalsIgnoreCase(UserRoles.attendee.name()));
 
         return root;
     }

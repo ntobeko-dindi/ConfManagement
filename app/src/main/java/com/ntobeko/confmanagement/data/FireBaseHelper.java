@@ -1,11 +1,15 @@
 package com.ntobeko.confmanagement.data;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
+import android.widget.TextView;
 
 import androidx.fragment.app.FragmentActivity;
 
@@ -16,13 +20,15 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
-import com.ntobeko.confmanagement.Enums.UserRoles;
+import com.ntobeko.confmanagement.MainActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
+import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentRegisterBinding;
+import com.ntobeko.confmanagement.databinding.FragmentRejectedBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.Conference;
@@ -35,6 +41,8 @@ import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.User;
 import com.ntobeko.confmanagement.models.Utilities;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +56,10 @@ public class FireBaseHelper{
     public FireBaseHelper(){
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+    }
+
+    public FirebaseAuth getmAuth() {
+        return mAuth;
     }
 
     public void createUser(User user, View view, FragmentActivity startActivity, Context context){
@@ -67,6 +79,7 @@ public class FireBaseHelper{
                         .set(userDetails)
                         .addOnSuccessListener(aVoid -> {
                             dialog.dismissLoader();
+                            this.getLoggedInUserRole(view, context);
                             startActivity.startActivity(new Intent(context, AuthActivity.class));
                             startActivity.finish();
                         })
@@ -90,6 +103,7 @@ public class FireBaseHelper{
             .addOnCompleteListener(startActivity, task -> {
                 if (task.isSuccessful()) {
                     dialog.dismissLoader();
+                    this.getLoggedInUserRole(view, context);
                     startActivity.startActivity(new Intent(context, endActivity.getClass()));
                     startActivity.finish();
                 } else {
@@ -115,7 +129,7 @@ public class FireBaseHelper{
         article.put("datePosted", newsArticle.getDatePosted());
         article.put("link", newsArticle.getLink());
 
-        db.collection("articles").document(Objects.requireNonNull(mAuth.getUid()) + "(" + newsArticle.getDatePosted() + ")")
+        db.collection("news").document()
             .set(article)
             .addOnSuccessListener(aVoid -> {new Utilities().showSnackBar("Article Posted", view);dialog.dismissLoader();})
             .addOnFailureListener(e -> {new Utilities().showSnackBar("Error occurred while posting the article", view);dialog.dismissLoader();});
@@ -124,11 +138,11 @@ public class FireBaseHelper{
     public void getArticles(View view, Context context, FragmentNewsBinding binding, Activity activity){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
-        db.collection("articles")
+        db.collection("news")
             .get()
             .addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    ArrayList<NewsArticle> articles = new ArrayList<>();
+                    ArrayList<NewsArticle> news = new ArrayList<>();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         NewsArticle article = new NewsArticle(
                                 Objects.requireNonNull(document.getData().get("title")).toString(),
@@ -137,12 +151,12 @@ public class FireBaseHelper{
                                 Objects.requireNonNull(document.getData().get("datePosted")).toString(),
                                 Objects.requireNonNull(document.getData().get("link")).toString()
                         );
-                        articles.add(article);
+                        news.add(article);
                     }
-                    if(articles.isEmpty()){
+                    if(news.isEmpty()){
                         new Utilities().showSnackBar("There are no news to show", view);
                     }
-                    ListAdapter listAdapter = new NewsListAdapter(context,articles);
+                    ListAdapter listAdapter = new NewsListAdapter(context,news);
                     binding.listview.setAdapter(listAdapter);
                     binding.listview.setClickable(true);
                     dialog.dismissLoader();
@@ -156,7 +170,7 @@ public class FireBaseHelper{
     public void getAuthNews(View view, Context context, FragmentAuthnewsBinding binding,Activity activity){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
-        db.collection("articles")
+        db.collection("news")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -196,6 +210,8 @@ public class FireBaseHelper{
         _abstract.put("submissionDate", abstractModel.getSubmissionDate());
         _abstract.put("coAuthors", abstractModel.getCoAuthors());
         _abstract.put("status", abstractModel.getStatus().name());
+        _abstract.put("abstractPdfDownloadUrl", abstractModel.getAbstractPdfDownloadUrl());
+        _abstract.put("downloadProofOfPaymentUrl", abstractModel.getDownloadProofOfPaymentUrl());
 
         db.collection("AbstractRegistrations").document()
                 .set(_abstract)
@@ -259,6 +275,7 @@ public class FireBaseHelper{
                                     "Date : " + Objects.requireNonNull(document.getData().get("date")),
                                     "Posted On : " + Objects.requireNonNull(document.getData().get("createdDate"))
                             );
+                            conference.setConferenceId(document.getId());
                             conferences.add(conference);
                         }
                         if(conferences.isEmpty()){
@@ -292,6 +309,7 @@ public class FireBaseHelper{
                                     "Date : " + Objects.requireNonNull(document.getData().get("date")),
                                     "Posted On : " + Objects.requireNonNull(document.getData().get("createdDate"))
                             );
+                            conference.setConferenceId(document.getId());
                             conferences.add(conference);
                         }
                         if(conferences.isEmpty()){
@@ -299,10 +317,15 @@ public class FireBaseHelper{
                         }
 
                         String[] conf = new String[conferences.size()];
+                        StringBuilder ids = new StringBuilder("");
 
                         for (int i = 0; i < conf.length; i++) {
                             conf[i] = conferences.get(i).getName();
+                            ids.append(conferences.get(i).getConferenceId()).append("|");
                         }
+                        TextView textView = view.findViewById(R.id.hiddenConfIds);
+                        textView.setText(ids.substring(0, ids.toString().length() - 1));
+
                         ArrayAdapter<String> conferenceAdapter = new ArrayAdapter<>(context, R.layout.dropdown_item, conf);
                         conferenceAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
                         binding.spinnerConference.setAdapter(conferenceAdapter);
@@ -369,7 +392,7 @@ public class FireBaseHelper{
                 });
     }
 
-    public void getAbstractsPendingApprovals(View view, Context context, FragmentApprovalsBinding binding, Activity activity, ProposalStatus proposalStatus){
+    public void getAbstractsPendingApprovals(View view, Context context, Object binding, Activity activity, ProposalStatus proposalStatus, boolean isAttendee){
         LoadingDialog dialog = new LoadingDialog(activity);
         dialog.showLoader();
         db.collection("AbstractRegistrations")
@@ -388,20 +411,45 @@ public class FireBaseHelper{
                                     ProposalStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString())
                             );
                             _abstract.setAbstractId(document.getId());
+                            _abstract.setAbstractPdfDownloadUrl((String) document.getData().get("abstractPdfDownloadUrl"));
+                            _abstract.setDownloadProofOfPaymentUrl((String) document.getData().get("downloadProofOfPaymentUrl"));
                             _abstract.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
-                            new Utilities().showSnackBar(proposalStatus.name(), view);
+
                             if(_abstract.getStatus().name().equalsIgnoreCase(proposalStatus.name())){
                                 abstracts.add(_abstract);
                             }
                         }
+                        if(isAttendee){
+                            for (int i = 0; i < abstracts.size(); i++) {
+                                if(!abstracts.get(i).getUserId().equalsIgnoreCase(mAuth.getCurrentUser().getUid())){
+                                    abstracts.remove(i);
+                                }
+                            }
+                        }
+
                         if(abstracts.isEmpty()){
                             new Utilities().showSnackBar("There are no abstracts to show", view);
+                        }else{
+                            if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Submitted.name())){
+                                FragmentApprovalsBinding bind = (FragmentApprovalsBinding) binding;
+                                ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts, bind, activity);
+                                ((FragmentApprovalsBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentApprovalsBinding) binding).listview.setClickable(true);
+                            }else
+                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Rejected.name())){
+                                FragmentRejectedBinding bind = (FragmentRejectedBinding) binding;
+                                ListAdapter listAdapter = new RejectedListAdapter(context,abstracts,activity);
+                                ((FragmentRejectedBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentRejectedBinding) binding).listview.setClickable(true);
+                            }else
+                                if(proposalStatus.name().equalsIgnoreCase(ProposalStatus.Approved.name())){
+                                FragmentApprovedBinding bind = (FragmentApprovedBinding) binding;
+                                ListAdapter listAdapter = new ApprovedListAdapter(context,abstracts,activity);
+                                ((FragmentApprovedBinding) binding).listview.setAdapter(listAdapter);
+                                ((FragmentApprovedBinding) binding).listview.setClickable(true);
+                            }
                         }
-                        ListAdapter listAdapter = new ApprovalsListAdapter(context,abstracts, binding, activity);
-                        binding.listview.setAdapter(listAdapter);
-                        binding.listview.setClickable(true);
                         dialog.dismissLoader();
-
                     } else {
                         dialog.dismissLoader();
                         new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
@@ -414,10 +462,21 @@ public class FireBaseHelper{
                 .set(conferenceAbstract)
                 .addOnSuccessListener(aVoid -> {
                     db.collection("AbstractRegistrations").document(conferenceAbstract.getAbstractId()).update("status", conferenceAbstract.getDecisionStatus())
-                            .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view); this.getAbstractsPendingApprovals(view,context,binding,activity,ProposalStatus.Submitted);})
+                            .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view); this.getAbstractsPendingApprovals(view,context,binding,activity,ProposalStatus.Submitted,false);})
                             .addOnFailureListener(b -> new Utilities().showSnackBar(failureMsg, view));
                     new Utilities().showSnackBar(successMsg, view);
                 });
+    }
+
+    public void approvePdfAbstract(AbstractApproval conferenceAbstract, View view, String successMsg, String failureMsg, Context context, Activity activity){
+        db.collection("ConferenceApprovals").document(Objects.requireNonNull(mAuth.getUid()))
+            .set(conferenceAbstract)
+            .addOnSuccessListener(aVoid -> {
+                db.collection("AbstractRegistrations").document(conferenceAbstract.getAbstractId()).update("status", conferenceAbstract.getDecisionStatus())
+                        .addOnSuccessListener(a -> {new Utilities().showSnackBar(successMsg, view);})
+                        .addOnFailureListener(b -> new Utilities().showSnackBar(failureMsg, view));
+                new Utilities().showSnackBar(successMsg, view);
+            });
     }
 
     public void approveConferenceAttendance(ConferenceAttendanceApproval confAttendanceApproval, View view, String successMsg, String failureMsg){
@@ -463,11 +522,25 @@ public class FireBaseHelper{
 //                    }
 //                });
 //    }
-    public UserRoles getLoggedInUserRole(Activity activity){
-        String email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
-        assert email != null;
-        if(email.equalsIgnoreCase("john.smith@gmail.com"))
-            return UserRoles.reviewer;
-        return UserRoles.attendee;
+    public void getLoggedInUserRole(View view, Context context){
+        String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
+        db.collection("Users")
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if(document.getId().equalsIgnoreCase(currentUserId)){
+                            String role = Objects.requireNonNull(document.getData().get("role")).toString();
+                            SharedPreferences pref = context.getSharedPreferences("currentUserRole", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("role", role);
+                            editor.apply();
+                        }
+                    }
+                } else {
+                    new Utilities().showSnackBar(Objects.requireNonNull(task.getException()).getMessage(), view);
+                }
+            });
     }
 }

@@ -3,7 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation2"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_conferences">
+
+    <fragment
+        android:id="@+id/nav_conferences"
+        android:name="com.ntobeko.confmanagement.ui.conferences.ConferencesFragment"
+        android:label="@string/title_conferences"
+        tools:layout="@layout/fragment_conferences" />
 
     <fragment
         android:id="@+id/nav_home"
@@ -36,19 +42,13 @@
         tools:layout="@layout/fragment_authnews" />
 
     <fragment
-        android:id="@+id/nav_conferences"
-        android:name="com.ntobeko.confmanagement.ui.conferences.ConferencesFragment"
-        android:label="@string/title_conferences"
-        tools:layout="@layout/fragment_conferences" />
-
-    <fragment
         android:id="@+id/nav_approved"
-        android:name="com.ntobeko.confmanagement.ui.approvals.ApprovalsFragment"
+        android:name="com.ntobeko.confmanagement.ui.approved.ApprovedFragment"
         android:label="@string/menu_approval"
         tools:layout="@layout/fragment_approvals" />
     <fragment
         android:id="@+id/nav_rejected"
-        android:name="com.ntobeko.confmanagement.ui.approvals.ApprovalsFragment"
+        android:name="com.ntobeko.confmanagement.ui.rejected.RejectedFragment"
         android:label="@string/menu_approval"
         tools:layout="@layout/fragment_approvals" />
 </navigation>

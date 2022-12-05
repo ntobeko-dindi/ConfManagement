@@ -4,27 +4,34 @@ import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.data.FireBaseHelper;
+import com.ntobeko.confmanagement.data.FireBaseStorageHelper;
 import com.ntobeko.confmanagement.databinding.FragmentRegisterBinding;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.ConferenceAttendance;
+import com.ntobeko.confmanagement.models.LoadingDialog;
 import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.Utilities;
@@ -35,8 +42,13 @@ public class RegisterFragment extends Fragment {
 
     private FragmentRegisterBinding binding;
     private final int CHOOSE_PDF_FROM_DEVICE = 1001;
+    private StorageReference mStorageRef;
+    String docName = null;
+
+    String selectedConfId ;
 
     String selectedRegType = "";
+    String folderName = "";
     Boolean isAbstractSubmission = false;
 
     @SuppressLint("NonConstantResourceId")
@@ -57,11 +69,11 @@ public class RegisterFragment extends Fragment {
                             "Ain't No Stopping Us Now.",
                             "Living The Sales Life."};
 
-        String[] coAuthors = {"Dr B. Mutanga", "Mr P. Dlamini"};
-
         ArrayAdapter<String> themeAdapter = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, themes);
         new FireBaseHelper().populateConferenceDropdown(root, getContext(),binding,getActivity());
         new FireBaseHelper().populateCoAuthorsDropdown(root, getContext(),binding, getActivity());
+
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         themeAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
 
@@ -115,6 +127,12 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        binding.spinnerConference.setOnItemClickListener((parent, view, position, id) -> {
+            String arr [] = binding.hiddenConfIds.getText().toString().split("\\|");
+            selectedConfId = arr[position];
+            new Utilities().showSnackBar(selectedConfId , root);
+        });
+
         binding.register.setOnClickListener(v -> {
             String conference = binding.spinnerConference.getText().toString();
             String title = Objects.requireNonNull(binding.researchTopic.getText()).toString();
@@ -137,10 +155,7 @@ public class RegisterFragment extends Fragment {
                     new Utilities().showSnackBar("Please select theme", root);
                     return;
                 }
-                if(title.equals("") || body.equals("")){
-                    new Utilities().showSnackBar("Both research topic and abstract are required", root);
-                    return;
-                }
+
                 AbstractModel model = new AbstractModel();
                 model.setResearchTopic(title);
                 model.setAbstractBody(body);
@@ -149,13 +164,36 @@ public class RegisterFragment extends Fragment {
                 model.setSubmissionDate(new LocalDate().getLocalDateTime());
                 model.setCoAuthors(_coAuthors);
                 model.setTheme(theme);
+                model.setAbstractPdfDownloadUrl(binding.hiddenConfIds.getText().toString());
+                model.setDownloadProofOfPaymentUrl(binding.downloadProofOfPaymentUrl.getText().toString());
+
+                if(!binding.hiddenConfIds.getText().toString().substring(0,5).equalsIgnoreCase("https")){
+                    model.setAbstractPdfDownloadUrl("");
+                }
 
                 new FireBaseHelper().submitConferenceAbstract(model, root,getActivity());
             }
         });
 
-        binding.chooseFile.setOnClickListener(v -> chooseFileFromDevice());
+        binding.chooseFile.setOnClickListener(v -> {
+            if(binding.spinnerConference.getText().toString().equals("")){
+                new Utilities().showSnackBar("Please Select A Conference", root);
+                return;
+            }
+            docName = "abstract";
+            folderName = "Abstracts";
+            chooseFileFromDevice();
+        });
 
+        binding.uploadProofOfPayment.setOnClickListener(v -> {
+            if(binding.spinnerConference.getText().toString().equals("")){
+                new Utilities().showSnackBar("Please Select A Conference", root);
+                return;
+            }
+            docName = "payment";
+            folderName = "Payments";
+            chooseFileFromDevice();
+        });
         return root;
     }
 
@@ -169,9 +207,12 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        String storageRefPath = folderName + "/" + selectedConfId + "/" + Objects.requireNonNull(new FireBaseHelper().getmAuth().getCurrentUser()).getUid() + "/" + docName;
+
         if(requestCode == CHOOSE_PDF_FROM_DEVICE && resultCode == RESULT_OK){
             assert data != null;
-            new Utilities().showSnackBar("Path is :=> " + data.getData(),getView()); //
+            new FireBaseStorageHelper().uploadImage(data.getData(),getActivity(),storageRefPath,getView(), docName);
         }
     }
 
