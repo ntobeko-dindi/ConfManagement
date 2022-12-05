@@ -77,4 +77,6 @@
     <string name="back">Back</string>
     <string name="open_proof_of_payment">Proof of Payment</string>
     <string name="upload_proof_of_payment">Upload Proof of Payment</string>
+    <string name="abstract_submission_fee">Abstract Submission Fee in Rands e.g (5000)</string>
+    <string name="attendance_fee">Attendance Fee in Rands e.g (3500)</string>
 </resources>

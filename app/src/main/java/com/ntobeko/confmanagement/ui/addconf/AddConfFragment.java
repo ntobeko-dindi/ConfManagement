@@ -30,17 +30,23 @@ public class AddConfFragment extends Fragment {
         View root = binding.getRoot();
 
         binding.createConference.setOnClickListener(v -> {
-            String name, theme, venue, date;
+            String name, theme, venue, date,abstractSubmissionFee,attendanceFee;
+
             name = Objects.requireNonNull(binding.conferenceName.getText()).toString();
             theme = Objects.requireNonNull(binding.conferenceTheme.getText()).toString();
             venue = Objects.requireNonNull(binding.conferenceVenue.getText()).toString();
             date = Objects.requireNonNull(binding.conferenceDate.getText()).toString();
+            attendanceFee = Objects.requireNonNull(binding.attendanceFee.getText()).toString();
+            abstractSubmissionFee = Objects.requireNonNull(binding.abstractSubmissionFee.getText()).toString();
 
-            if(name.equals("") || theme.equals("") || venue.equals("") || date.equals("")){
+            if(name.equals("") || theme.equals("") || venue.equals("") || date.equals("") || attendanceFee.equals("") || abstractSubmissionFee.equals("")){
                 new Utilities().showSnackBar("All fields are required", root);
                 return;
             }
             Conference conference = new Conference(name,theme,venue,date, new LocalDate().getLocalDateTime());
+            conference.setAbstractSubmissionFee(abstractSubmissionFee);
+            conference.setAttendanceFee(attendanceFee);
+
             new FireBaseHelper().addNewConference(conference, root,getActivity());
         });
 

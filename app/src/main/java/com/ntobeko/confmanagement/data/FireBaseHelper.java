@@ -276,6 +276,8 @@ public class FireBaseHelper{
                                     "Posted On : " + Objects.requireNonNull(document.getData().get("createdDate"))
                             );
                             conference.setConferenceId(document.getId());
+                            conference.setAttendanceFee("Attendance Fee : R " + Objects.requireNonNull(document.getData().get("attendanceFee")).toString());
+                            conference.setAbstractSubmissionFee("Abstract Submission Fee : R " + Objects.requireNonNull(document.getData().get("abstractSubmissionFee")).toString());
                             conferences.add(conference);
                         }
                         if(conferences.isEmpty()){
@@ -314,6 +316,8 @@ public class FireBaseHelper{
                         }
                         if(conferences.isEmpty()){
                             new Utilities().showSnackBar("There are no conferences to show", view);
+                            dialog.dismissLoader();
+                            return;
                         }
 
                         String[] conf = new String[conferences.size()];
@@ -374,6 +378,8 @@ public class FireBaseHelper{
                         }
                         if(attendees.isEmpty()){
                             new Utilities().showSnackBar("There are no registered attendees to show", view);
+                            dialog.dismissLoader();
+                            return;
                         }
 
                         String[] att = new String[attendees.size()];

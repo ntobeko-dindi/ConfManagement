@@ -140,14 +140,13 @@ public class RegisterFragment extends Fragment {
             String body = Objects.requireNonNull(binding.abstractBody.getText()).toString();
             String _coAuthors = binding.spinnerCoAuthors.getText().toString();
 
-            String conferenceId = conference; //Get from dropdown
 
             if(conference.equals("selectedRegType")){
                 new Utilities().showSnackBar("Please select conference", root);
                 return;
             }
 
-            SubmitConferenceAttendance confAttendance = new SubmitConferenceAttendance(conferenceId, selectedRegType, isAbstractSubmission);
+            SubmitConferenceAttendance confAttendance = new SubmitConferenceAttendance(selectedConfId, selectedRegType.equals("") ? "Attendee" : selectedRegType, isAbstractSubmission);
             new FireBaseHelper().submitConferenceAttendance(confAttendance, root,getActivity());
 
             if((selectedRegType.equals("Author") || selectedRegType.equals("CoAuthor") && isAbstractSubmission)) {

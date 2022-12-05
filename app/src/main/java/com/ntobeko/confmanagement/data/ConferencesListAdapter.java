@@ -34,12 +34,17 @@ public class ConferencesListAdapter extends ArrayAdapter<Conference> {
         TextView venue = convertView.findViewById(R.id.venue);
         TextView date = convertView.findViewById(R.id.date);
         TextView createdDate = convertView.findViewById(R.id.createdDate);
+        TextView attendanceFee = convertView.findViewById(R.id.attendanceFee);
+        TextView abstractSubmissionFee = convertView.findViewById(R.id.abstractSubmissionFee);
 
         name.setText(conference.getName());
         theme.setText(conference.getTheme());
         venue.setText(conference.getVenue());
         date.setText(conference.getDate());
         createdDate.setText(conference.getCreatedDate());
+        attendanceFee.setText(conference.getAttendanceFee());
+        abstractSubmissionFee.setText(conference.getAbstractSubmissionFee());
+
         return convertView;
     }
 }
