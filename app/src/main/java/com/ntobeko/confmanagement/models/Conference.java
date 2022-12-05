@@ -1,7 +1,7 @@
 package com.ntobeko.confmanagement.models;
 
 public class Conference {
-    private String id, name, theme, venue, date, createdDate;
+    private String id, name, theme, venue, date, createdDate,attendanceFee,abstractSubmissionFee;
 
     public Conference(String name, String theme, String venue, String date, String createdDate) {
         this.name = name;
@@ -59,5 +59,21 @@ public class Conference {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public String getAttendanceFee() {
+        return attendanceFee;
+    }
+
+    public void setAttendanceFee(String attendanceFee) {
+        this.attendanceFee = attendanceFee;
+    }
+
+    public String getAbstractSubmissionFee() {
+        return abstractSubmissionFee;
+    }
+
+    public void setAbstractSubmissionFee(String abstractSubmissionFee) {
+        this.abstractSubmissionFee = abstractSubmissionFee;
     }
 }

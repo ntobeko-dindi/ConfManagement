@@ -139,7 +139,54 @@
                 android:text="@string/app_name"
                 tools:ignore="RtlHardcoded" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="230dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/attendanceFee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:gravity="left"
+                android:textStyle="bold"
+                android:paddingBottom="16dp"
+                android:textSize="16sp"
+                android:text="@string/app_name"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="270dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/abstractSubmissionFee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="3dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:gravity="left"
+                android:textStyle="bold"
+                android:paddingBottom="16dp"
+                android:textSize="16sp"
+                android:text="@string/app_name"
+                tools:ignore="RtlHardcoded" />
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 
 </LinearLayout>

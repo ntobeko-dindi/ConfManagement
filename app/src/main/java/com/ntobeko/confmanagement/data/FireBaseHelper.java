@@ -276,6 +276,8 @@ public class FireBaseHelper{
                                     "Posted On : " + Objects.requireNonNull(document.getData().get("createdDate"))
                             );
                             conference.setConferenceId(document.getId());
+                            conference.setAttendanceFee("Attendance Fee" + Objects.requireNonNull(document.getData().get("attendanceFee")).toString());
+                            conference.setAbstractSubmissionFee("Abstract Submission Fee" + Objects.requireNonNull(document.getData().get("abstractSubmissionFee")).toString());
                             conferences.add(conference);
                         }
                         if(conferences.isEmpty()){
