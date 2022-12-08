@@ -72,8 +72,8 @@ public class AttApprovedListAdapter extends ArrayAdapter<SubmitConferenceAttenda
         });
 
         confName.setText(_confAttendance.getConferenceName());
-        attendType.setText(_confAttendance.getRegistrationType());
-        regDate.setText(_confAttendance.getRegistrationDate());
+        attendType.setText("Registration Type: "+_confAttendance.getRegistrationType());
+        regDate.setText("Registered On: "+_confAttendance.getRegistrationDate());
         attendStatus.setText(_confAttendance.getStatus().name());
         hiddenAttId.setText(_confAttendance.getAttendanceId());
         downloadProofOfPaymentUrl.setText(_confAttendance.getDownloadProofOfPaymentUrl());
