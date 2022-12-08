@@ -348,6 +348,7 @@ public class FireBaseHelper{
 
         confAttendance.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         confAttendance.setRegistrationDate(new LocalDate().getLocalDateTime());
+        confAttendance.setConferenceName(confAttendance.getConferenceName());
         confAttendance.setStatus(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted);
 
         db.collection("ConferenceAttendances").document()
@@ -567,10 +568,11 @@ public class FireBaseHelper{
                                     Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("abstractSubmission")).toString())
                             );
                             _pendingAttendeeApproval.setAttendanceId(document.getId());
+                            _pendingAttendeeApproval.setConferenceName(Objects.requireNonNull(document.getData().get("conferenceName")).toString());
                             _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
                             _pendingAttendeeApproval.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
                             _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("registrationType")).toString());
-                            _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("downloadProofOfPaymentUrl")).toString());
+                            _pendingAttendeeApproval.setDownloadProofOfPaymentUrl(Objects.requireNonNull(document.getData().get("downloadProofOfPaymentUrl")).toString());
 
                             if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted.name())){
                                 attendanceApprovalsPending.add(_pendingAttendeeApproval);

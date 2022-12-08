@@ -31,7 +31,7 @@
                     android:id="@+id/conferenceName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Attendance"
+                    android:text="Conference Name"
                     android:textAppearance="?attr/textAppearanceHeadline6"
                     />
 
@@ -48,22 +48,18 @@
                     app:shapeAppearanceOverlay="@style/Button4"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="@color/white" />
+
+
                 <TextView
-                    android:id="@+id/attendanceType"
+                    android:id="@+id/attendType"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/attendance_type"
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary"/>
-                <TextView
-                    android:id="@+id/authors"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text=""
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary"/>
+
+
                 <TextView
                     android:id="@+id/registrationDate"
                     android:layout_width="wrap_content"
@@ -94,21 +90,15 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginTop="0dp"
+                    android:visibility="gone"
                     android:text=""
                     android:textAppearance="?attr/textAppearanceBody2"
                     android:textColor="?android:attr/textColorSecondary"
                     />
+
+
                 <TextView
                     android:id="@+id/downloadProofOfPaymentUrl"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="0dp"
-                    android:text=""
-                    android:textAppearance="?attr/textAppearanceBody2"
-                    android:textColor="?android:attr/textColorSecondary"
-                    />
-                <TextView
-                    android:id="@+id/hiddenAbstractPdfDownloadUrl"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginTop="0dp"

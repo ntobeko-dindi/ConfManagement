@@ -3,7 +3,7 @@ package com.ntobeko.confmanagement.models;
 import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 
 public class SubmitConferenceAttendance {
-    public String id, userId, conferenceId, registrationType, registrationDate, downloadProofOfPaymentUrl;
+    public String id, userId, conferenceId, registrationType, registrationDate, downloadProofOfPaymentUrl, conferenceName;
     Boolean isAbstractSubmission;
     public ConferenceAttendanceStatus status;
 
@@ -79,5 +79,13 @@ public class SubmitConferenceAttendance {
 
     public void setAbstractSubmission(Boolean abstractSubmission) {
         isAbstractSubmission = abstractSubmission;
-}
+    }
+
+    public String getConferenceName() {
+        return conferenceName;
+    }
+
+    public void setConferenceName(String conferenceName) {
+        this.conferenceName = conferenceName;
+    }
 }

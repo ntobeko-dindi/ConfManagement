@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
 import com.ntobeko.confmanagement.Enums.UserRoles;
 import com.ntobeko.confmanagement.PdfViewerActivity;
@@ -22,6 +23,7 @@ import com.ntobeko.confmanagement.databinding.FragmentAttapprovalsBinding;
 import com.ntobeko.confmanagement.models.AbstractApproval;
 import com.ntobeko.confmanagement.models.AbstractModel;
 import com.ntobeko.confmanagement.models.ConferenceAttendance;
+import com.ntobeko.confmanagement.models.ConferenceAttendanceApproval;
 import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.Utilities;
@@ -51,7 +53,7 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
         String currentUserRole = Utilities.getCurrentUserRoleFromSharedPreferences(getContext());
 
         TextView confName = convertView.findViewById(R.id.conferenceName);
-        TextView attendType = convertView.findViewById(R.id.attendanceType);
+        TextView attendType = convertView.findViewById(R.id.attendType);
         TextView regDate = convertView.findViewById(R.id.registrationDate);
         TextView attendStatus = convertView.findViewById(R.id.status);
         TextView hiddenAttId = convertView.findViewById(R.id.hiddenAttId);
@@ -90,7 +92,6 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
 //            activity.startActivity(i);
 //        });
 
-
         openProofOfPayment.setOnClickListener(v -> {
             Intent i = new Intent(getContext(), PdfViewerActivity.class);
             i.putExtra("abstractPdfDownloadUrl", downloadProofOfPaymentUrl.getText());
@@ -102,31 +103,32 @@ public class AttApprovalsListAdapter extends ArrayAdapter<SubmitConferenceAttend
         //set the button actions
         View finalConvertView = convertView;
         approve.setOnClickListener(v -> {
-//            ConferenceAttendance approveAbstract = new AbstractApproval(hiddenConfId.getText().toString(), ProposalStatus.Approved.name(), new LocalDate().getLocalDateTime());
-//            String successMsg;
-//            String failureMsg;
-//
-//            successMsg = "Conference attendance approved";
-//            failureMsg = "Error occurred while approving conference attendance";
-//            new FireBaseHelper().approveConferenceAttendance(approveAbstract, finalConvertView, successMsg, failureMsg,getContext(), fragmentApprovalsBinding,activity);
+            ConferenceAttendanceApproval confAttendanceApproval = new ConferenceAttendanceApproval(hiddenAttId.getText().toString(), ConferenceAttendanceStatus.AttendanceApproved.name(), new LocalDate().getLocalDateTime());
+            String successMsg;
+            String failureMsg;
 
+            successMsg = "Conference attendance approved";
+            failureMsg = "Error occurred while approving conference attendance";
+            new FireBaseHelper().approveConferenceAttendance(confAttendanceApproval, finalConvertView, successMsg, failureMsg);
         });
 
         rejectButton.setOnClickListener(v -> {
-//            AbstractApproval rejectAbstract = new AbstractApproval(hiddenConfId.getText().toString(), ProposalStatus.Rejected.toString(), new LocalDate().getLocalDateTime());
-//
-//            String successMsg = "Conference abstract rejected";
-//            String failureMsg = "Error occurred while rejecting conference abstract";
-//            new FireBaseHelper().approveAbstract(rejectAbstract, finalConvertView, successMsg, failureMsg, getContext(), fragmentApprovalsBinding,activity);
+            ConferenceAttendanceApproval confAttendanceRejection = new ConferenceAttendanceApproval(hiddenAttId.getText().toString(), ConferenceAttendanceStatus.AttendanceRejected.name(), new LocalDate().getLocalDateTime());
 
+            String successMsg = "Conference attendance rejected";
+            String failureMsg = "Error occurred while rejecting conference attendance";
+            new FireBaseHelper().approveConferenceAttendance(confAttendanceRejection, finalConvertView, successMsg, failureMsg);
         });
 
-        confName.setText(_confAttendance.getConferenceId());
+        confName.setText(_confAttendance.getConferenceName());
         attendType.setText(_confAttendance.getRegistrationType());
         regDate.setText(_confAttendance.getRegistrationDate());
         attendStatus.setText(_confAttendance.getStatus().name());
-        hiddenAttId.setText(_confAttendance.getConferenceId());
+        hiddenAttId.setText(_confAttendance.getAttendanceId());
         downloadProofOfPaymentUrl.setText(_confAttendance.getDownloadProofOfPaymentUrl());
+
+        //hiddenConfId.setText(_abstract.getAbstractId());
+        //downloadProofOfPaymentUrl.setText(_abstract.getDownloadProofOfPaymentUrl());
 
 //        theme.setText("");
 //        status.setText(_abstract.getStatus().toString());

@@ -40,7 +40,7 @@
     <string name="email_or_user_name">Email or User Name</string>
     <string name="or">OR</string>
     <string name="menu_register">Register</string>
-    <string name="menu_approval">Approvals</string>
+    <string name="menu_approval">Abstracts Approvals</string>
     <string name="type_research_abstract_here">Type Research Abstract here</string>
     <string name="select_associated_conference">Select associated conference</string>
     <string name="select_role">Select appropriate role</string>

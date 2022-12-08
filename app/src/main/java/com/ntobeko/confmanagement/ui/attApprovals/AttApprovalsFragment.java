@@ -12,6 +12,8 @@ import com.ntobeko.confmanagement.data.FireBaseHelper;
 import com.ntobeko.confmanagement.databinding.FragmentAttapprovalsBinding;
 import com.ntobeko.confmanagement.models.Utilities;
 
+import java.util.Objects;
+
 public class AttApprovalsFragment extends Fragment {
 
     private FragmentAttapprovalsBinding binding;

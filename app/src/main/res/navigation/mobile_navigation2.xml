@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/nav_att_approval"
         android:name="com.ntobeko.confmanagement.ui.attApprovals.AttApprovalsFragment"
-        android:label="Attendance Approval"
+        android:label="Attendance Approvals"
         tools:layout="@layout/fragment_attapprovals" />
 
     <fragment
