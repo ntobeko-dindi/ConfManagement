@@ -80,4 +80,6 @@
     <string name="abstract_submission_fee">Abstract Submission Fee in Rands e.g (5000)</string>
     <string name="attendance_fee">Attendance Fee in Rands e.g (3500)</string>
     <string name="attendance_type">Attendance Type:</string>
+    <string name="approved_attendence">Approved Attendence</string>
+    <string name="rejected_attendence">Rejected Attendence</string>
 </resources>

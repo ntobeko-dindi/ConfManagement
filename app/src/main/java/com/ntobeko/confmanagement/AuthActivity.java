@@ -39,7 +39,7 @@ public class AuthActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
             mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_gallery, R.id.nav_att_approval,R.id.nav_home, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected)
+                    R.id.nav_gallery, R.id.nav_att_approval,R.id.nav_home, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected, R.id.nav_attapproved, R.id.nav_attrejected)
                     .setOpenableLayout(drawer)
                     .build();
 

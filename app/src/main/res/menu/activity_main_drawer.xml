@@ -39,9 +39,17 @@
                     android:icon="@drawable/ic_baseline_check_circle_24"
                     android:title="@string/approved_abstracts" />
                 <item
+                    android:id="@+id/nav_attapproved"
+                    android:icon="@drawable/ic_baseline_check_circle_24"
+                    android:title="@string/approved_attendence" />
+                <item
                     android:id="@+id/nav_rejected"
                     android:icon="@drawable/ic_baseline_cancel_24"
                     android:title="@string/rejected_abstracts" />
+                <item
+                    android:id="@+id/nav_attrejected"
+                    android:icon="@drawable/ic_baseline_cancel_24"
+                    android:title="@string/rejected_attendence" />
             </menu>
         </item>
     </group>

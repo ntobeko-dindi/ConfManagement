@@ -20,11 +20,12 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.ntobeko.confmanagement.AuthActivity;
 import com.ntobeko.confmanagement.Enums.ConferenceAttendanceStatus;
 import com.ntobeko.confmanagement.Enums.ProposalStatus;
-import com.ntobeko.confmanagement.MainActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAttapprovalsBinding;
+import com.ntobeko.confmanagement.databinding.FragmentAttapprovedBinding;
+import com.ntobeko.confmanagement.databinding.FragmentAttrejectedBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
@@ -43,7 +44,6 @@ import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.User;
 import com.ntobeko.confmanagement.models.Utilities;
 
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -590,4 +590,84 @@ public class FireBaseHelper{
                     }
            });
 }
+
+    public void getConferenceApprovedAttendance(View view, Context context, FragmentAttapprovedBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
+        db.collection("ConferenceAttendances")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<SubmitConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            SubmitConferenceAttendance _pendingAttendeeApproval = new SubmitConferenceAttendance(
+                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("registrationDate")).toString(),
+                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("abstractSubmission")).toString())
+                            );
+                            _pendingAttendeeApproval.setAttendanceId(document.getId());
+                            _pendingAttendeeApproval.setConferenceName(Objects.requireNonNull(document.getData().get("conferenceName")).toString());
+                            _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
+                            _pendingAttendeeApproval.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
+                            _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("registrationType")).toString());
+                            _pendingAttendeeApproval.setDownloadProofOfPaymentUrl(Objects.requireNonNull(document.getData().get("downloadProofOfPaymentUrl")).toString());
+                            _pendingAttendeeApproval.setRegistrationDate(Objects.requireNonNull(document.getData().get("registrationDate")).toString());
+
+                            if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendanceApproved.name())){
+                                attendanceApprovalsPending.add(_pendingAttendeeApproval);
+                            }
+                        }
+                        if(attendanceApprovalsPending.isEmpty()){
+                            new Utilities().showSnackBar("There are no conference attendance approvals to show", view);
+                        }
+                        dialog.dismissLoader();
+                        ListAdapter listAdapter = new AttApprovedListAdapter(context, attendanceApprovalsPending, activity);
+                        binding.listview.setAdapter(listAdapter);
+                        binding.listview.setClickable(true);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
+    }
+
+    public void getConferenceRejectedAttendance(View view, Context context, FragmentAttrejectedBinding binding, Activity activity){
+        LoadingDialog dialog = new LoadingDialog(activity);
+        dialog.showLoader();
+        db.collection("ConferenceAttendances")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<SubmitConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            SubmitConferenceAttendance _pendingAttendeeApproval = new SubmitConferenceAttendance(
+                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("registrationDate")).toString(),
+                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("abstractSubmission")).toString())
+                            );
+                            _pendingAttendeeApproval.setAttendanceId(document.getId());
+                            _pendingAttendeeApproval.setConferenceName(Objects.requireNonNull(document.getData().get("conferenceName")).toString());
+                            _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
+                            _pendingAttendeeApproval.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
+                            _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("registrationType")).toString());
+                            _pendingAttendeeApproval.setDownloadProofOfPaymentUrl(Objects.requireNonNull(document.getData().get("downloadProofOfPaymentUrl")).toString());
+                            _pendingAttendeeApproval.setRegistrationDate(Objects.requireNonNull(document.getData().get("registrationDate")).toString());
+
+                            if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendanceRejected.name())){
+                                attendanceApprovalsPending.add(_pendingAttendeeApproval);
+                            }
+                        }
+                        if(attendanceApprovalsPending.isEmpty()){
+                            new Utilities().showSnackBar("There are no conference attendance approvals to show", view);
+                        }
+                        dialog.dismissLoader();
+                        ListAdapter listAdapter = new AttRejectedListAdapter(context, attendanceApprovalsPending, activity);
+                        binding.listview.setAdapter(listAdapter);
+                        binding.listview.setClickable(true);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+                });
+    }
 }
