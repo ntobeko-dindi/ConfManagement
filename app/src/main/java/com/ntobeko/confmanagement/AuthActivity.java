@@ -39,7 +39,7 @@ public class AuthActivity extends AppCompatActivity {
         NavigationView navigationView = binding.navView;
 
             mAppBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.nav_gallery, R.id.nav_home, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected)
+                    R.id.nav_gallery, R.id.nav_att_approval,R.id.nav_home, R.id.nav_slideshow, R.id.nav_addconf, R.id.nav_authnews, R.id.nav_conferences, R.id.nav_approved, R.id.nav_rejected)
                     .setOpenableLayout(drawer)
                     .build();
 
@@ -53,6 +53,7 @@ public class AuthActivity extends AppCompatActivity {
             MenuItem createConf = menu.findItem(R.id.nav_addconf);
             MenuItem approve = menu.findItem(R.id.nav_home);
             MenuItem postNews = menu.findItem(R.id.nav_slideshow);
+            MenuItem nav_att_approval = menu.findItem(R.id.nav_att_approval);
 
             createConf.setVisible(false);
             approve.setTitle("Pending Registrations");

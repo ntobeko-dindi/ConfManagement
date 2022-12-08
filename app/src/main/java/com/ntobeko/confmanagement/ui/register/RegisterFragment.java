@@ -147,6 +147,8 @@ public class RegisterFragment extends Fragment {
             }
 
             SubmitConferenceAttendance confAttendance = new SubmitConferenceAttendance(selectedConfId, selectedRegType.equals("") ? "Attendee" : selectedRegType, isAbstractSubmission);
+            confAttendance.setDownloadProofOfPaymentUrl(binding.downloadProofOfPaymentUrl.getText().toString());
+            confAttendance.setConferenceName(conference);
             new FireBaseHelper().submitConferenceAttendance(confAttendance, root,getActivity());
 
             if((selectedRegType.equals("Author") || selectedRegType.equals("CoAuthor") && isAbstractSubmission)) {

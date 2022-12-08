@@ -24,6 +24,7 @@ import com.ntobeko.confmanagement.MainActivity;
 import com.ntobeko.confmanagement.R;
 import com.ntobeko.confmanagement.databinding.FragmentApprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentApprovedBinding;
+import com.ntobeko.confmanagement.databinding.FragmentAttapprovalsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentAuthnewsBinding;
 import com.ntobeko.confmanagement.databinding.FragmentConferencesBinding;
 import com.ntobeko.confmanagement.databinding.FragmentNewsBinding;
@@ -35,13 +36,13 @@ import com.ntobeko.confmanagement.models.Conference;
 import com.ntobeko.confmanagement.models.ConferenceAttendance;
 import com.ntobeko.confmanagement.models.ConferenceAttendanceApproval;
 import com.ntobeko.confmanagement.models.LoadingDialog;
+import com.ntobeko.confmanagement.models.LocalDate;
 import com.ntobeko.confmanagement.models.Login;
 import com.ntobeko.confmanagement.models.NewsArticle;
 import com.ntobeko.confmanagement.models.SubmitConferenceAttendance;
 import com.ntobeko.confmanagement.models.User;
 import com.ntobeko.confmanagement.models.Utilities;
 
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -346,6 +347,8 @@ public class FireBaseHelper{
         dialog.showLoader();
 
         confAttendance.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+        confAttendance.setRegistrationDate(new LocalDate().getLocalDateTime());
+        confAttendance.setConferenceName(confAttendance.getConferenceName());
         confAttendance.setStatus(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted);
 
         db.collection("ConferenceAttendances").document()
@@ -496,22 +499,23 @@ public class FireBaseHelper{
                 });
     }
 
-    //    public void getConferenceAttendeePendingApprovals(View view, Context context, FragmentApprovalsBinding binding){
+//    public void getConferenceAttendeePendingApprovals(View view, Context context, FragmentApprovalsBinding binding){
 //        db.collection("ConferenceAttendances")
 //                .get()
 //                .addOnCompleteListener(task -> {
 //                    if (task.isSuccessful()) {
-//                        ArrayList<ConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
+//                        ArrayList<SubmitConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
 //                        for (QueryDocumentSnapshot document : task.getResult()) {
-//                            ConferenceAttendance _pendingAttendeeApproval = new ConferenceAttendance(
-//                                    Objects.requireNonNull(document.getData().get("userId")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("firstName")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("lastName")).toString(),
-//                                    ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()),
+//                            SubmitConferenceAttendance _pendingAttendeeApproval = new SubmitConferenceAttendance(
+//                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
 //                                    Objects.requireNonNull(document.getData().get("registeredDate")).toString(),
-//                                    Objects.requireNonNull(document.getData().get("isCoAuthor")).toString()
+//                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("isAbstractSubmission")).toString())
 //                            );
 //                            _pendingAttendeeApproval.setAttendanceId(document.getId());
+//                            _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
+//                            _pendingAttendeeApproval.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
+//                            _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("registrationType")).toString());
+//
 //                            if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted.name())){
 //                                attendanceApprovalsPending.add(_pendingAttendeeApproval);
 //                            }
@@ -528,6 +532,7 @@ public class FireBaseHelper{
 //                    }
 //                });
 //    }
+
     public void getLoggedInUserRole(View view, Context context){
         String currentUserId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
@@ -549,4 +554,40 @@ public class FireBaseHelper{
                 }
             });
     }
+
+        public void getConferenceAttendeePendingApprovals(View view, Context context, FragmentAttapprovalsBinding binding, Activity activity){
+        db.collection("ConferenceAttendances")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<SubmitConferenceAttendance> attendanceApprovalsPending = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            SubmitConferenceAttendance _pendingAttendeeApproval = new SubmitConferenceAttendance(
+                                    Objects.requireNonNull(document.getData().get("conferenceId")).toString(),
+                                    Objects.requireNonNull(document.getData().get("registrationDate")).toString(),
+                                    Boolean.parseBoolean(Objects.requireNonNull(document.getData().get("abstractSubmission")).toString())
+                            );
+                            _pendingAttendeeApproval.setAttendanceId(document.getId());
+                            _pendingAttendeeApproval.setConferenceName(Objects.requireNonNull(document.getData().get("conferenceName")).toString());
+                            _pendingAttendeeApproval.setUserId(Objects.requireNonNull(document.getData().get("userId")).toString());
+                            _pendingAttendeeApproval.setStatus(ConferenceAttendanceStatus.valueOf(Objects.requireNonNull(document.getData().get("status")).toString()));
+                            _pendingAttendeeApproval.setRegistrationType(Objects.requireNonNull(document.getData().get("registrationType")).toString());
+                            _pendingAttendeeApproval.setDownloadProofOfPaymentUrl(Objects.requireNonNull(document.getData().get("downloadProofOfPaymentUrl")).toString());
+
+                            if(_pendingAttendeeApproval.getStatus().name().equalsIgnoreCase(ConferenceAttendanceStatus.AttendeeRegistrationSubmitted.name())){
+                                attendanceApprovalsPending.add(_pendingAttendeeApproval);
+                            }
+                        }
+                        if(attendanceApprovalsPending.isEmpty()){
+                            new Utilities().showSnackBar("There are no conference attendance approvals to show", view);
+                        }
+                        ListAdapter listAdapter = new AttApprovalsListAdapter(context, attendanceApprovalsPending,binding, activity);
+                        binding.listview.setAdapter(listAdapter);
+                        binding.listview.setClickable(true);
+
+                    } else {
+                        new Utilities().showSnackBar("Error getting documents." + task.getException(), view);
+                    }
+           });
+}
 }

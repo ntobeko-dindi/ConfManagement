@@ -9,6 +9,10 @@
             android:icon="@drawable/ic_baseline_approval_24"
             android:title="@string/menu_approval" />
         <item
+            android:id="@+id/nav_att_approval"
+            android:icon="@drawable/ic_baseline_approval_24"
+            android:title="Attendance Approval" />
+        <item
             android:id="@+id/nav_conferences"
             android:icon="@drawable/ic_notifications_black_24dp"
             android:title="@string/title_conferences" />

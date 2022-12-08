@@ -40,7 +40,7 @@
     <string name="email_or_user_name">Email or User Name</string>
     <string name="or">OR</string>
     <string name="menu_register">Register</string>
-    <string name="menu_approval">Approvals</string>
+    <string name="menu_approval">Abstracts Approvals</string>
     <string name="type_research_abstract_here">Type Research Abstract here</string>
     <string name="select_associated_conference">Select associated conference</string>
     <string name="select_role">Select appropriate role</string>
@@ -79,4 +79,5 @@
     <string name="upload_proof_of_payment">Upload Proof of Payment</string>
     <string name="abstract_submission_fee">Abstract Submission Fee in Rands e.g (5000)</string>
     <string name="attendance_fee">Attendance Fee in Rands e.g (3500)</string>
+    <string name="attendance_type">Attendance Type:</string>
 </resources>
